@@ -12,7 +12,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_executable(gambit
     engine/src/main.cpp 
     engine/src/board.cpp 
+    engine/src/position.cpp
     engine/tests/test_bitboard.cpp
+    engine/tests/test_startingPosition.cpp
 )
 
 target_include_directories(gambit 

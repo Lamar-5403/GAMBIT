@@ -17,4 +17,6 @@ class Position {
 
     public:
         Position();
+
+        friend bool testStartingPosition();
 };
