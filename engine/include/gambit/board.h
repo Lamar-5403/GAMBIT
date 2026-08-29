@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 
 using Bitboard = std::uint64_t;
@@ -33,3 +34,8 @@ enum class PieceType {
 Bitboard squareToBitboard(Square square);
 int squareToRank(Square square);
 char squareToFile(Square square);
+Square fileRankToSquare(char file, int rank);
+bool isValidSquare(Square square);
+Bitboard setSquare(Bitboard board, Square square);
+Bitboard clearSquare(Bitboard board, Square square);
+bool isSquareSet(Bitboard board, Square square);

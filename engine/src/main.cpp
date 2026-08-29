@@ -2,11 +2,16 @@ bool testBoard();
 bool testRank();
 bool testFile();
 bool testStartingPosition();
+bool testFileRankToSquare();
 
 int main() {
-    if (testBoard() && testFile() && testRank() && testStartingPosition()) {
-        return 0;
-    }
+    bool passed = true;
 
-    return 1;
+    passed &= testBoard();
+    passed &= testFile();
+    passed &= testRank();
+    passed &= testStartingPosition();
+    passed &= testFileRankToSquare();
+
+    return passed ? 0 : 1;
 }

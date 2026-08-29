@@ -15,6 +15,10 @@ Bitboard& Position::getPieceBoard(Color color, PieceType piece) {
     return pieces[static_cast<uint8_t>(color)][static_cast<uint8_t>(piece)];
 }
 
+const Bitboard& Position::getPieceBoard(Color color, PieceType piece) const {
+    return pieces[static_cast<uint8_t>(color)][static_cast<uint8_t>(piece)];
+}
+
 void Position::initializeStartingPosition() {
     getPieceBoard(Color::WHITE, PieceType::PAWN) = 
         squareToBitboard(Square::A2) | 

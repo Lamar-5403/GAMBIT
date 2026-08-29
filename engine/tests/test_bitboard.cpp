@@ -7,9 +7,9 @@ bool testBoard() {
 
     for (int i = 0; i < NUM_SQUARES; i++) {
         Square square = static_cast<Square>(i);
-        std::cout << "Testing square: " << squareToFile(square) << squareToRank(square) << "\n";
+        // std::cout << "Testing square: " << squareToFile(square) << squareToRank(square) << "\n";
         Bitboard board = squareToBitboard(square);
-        std::cout << std::bitset<64>(board) << "\n";
+        // std::cout << std::bitset<64>(board) << "\n";
         Bitboard expected = 1ULL << i;
         
         if (board != expected) {
@@ -93,5 +93,54 @@ bool testFile() {
         std::cout << "All tests passed.\n";
     }
 
+    return failed == 0;
+}
+
+bool testFileRankToSquare() {
+    int failed = 0;
+
+    if (fileRankToSquare('A', 8) != Square::A8) {
+        failed += 1;
+        std::cout << "A8 failed.\n";
+    }
+
+    if (fileRankToSquare('B', 7) != Square::B7) {
+        failed += 1;
+        std::cout << "B7 failed.\n";
+    }
+
+    if (fileRankToSquare('C', 6) != Square::C6) {
+        failed += 1;
+        std::cout << "C6 failed.\n";
+    }
+
+    if (fileRankToSquare('D', 5) != Square::D5) {
+        failed += 1;
+        std::cout << "D5 failed.\n";
+    }
+
+    if (fileRankToSquare('E', 4) != Square::E4) {
+        failed += 1;
+        std::cout << "E4 failed.\n";
+    }
+
+    if (fileRankToSquare('F', 3) != Square::F3) {
+        failed += 1;
+        std::cout << "F3 failed.\n";
+    }
+
+    if (fileRankToSquare('G', 2) != Square::G2) {
+        failed += 1;
+        std::cout << "G2 failed.\n";
+    }
+
+    if (fileRankToSquare('H', 1) != Square::H1) {
+        failed += 1;
+        std::cout << "H1 failed.\n";
+    }
+
+    if (failed == 0) {
+        std::cout << "All tests passed.\n";
+    }
     return failed == 0;
 }
