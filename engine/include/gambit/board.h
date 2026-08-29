@@ -17,17 +17,17 @@ enum class Square {
 };
 
 enum class Color {
-    WHITE,
-    BLACK
+    WHITE = 0,
+    BLACK = 1
 };
 
 enum class PieceType {
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
-    QUEEN,
-    KING
+    PAWN = 0,
+    KNIGHT = 1,
+    BISHOP = 2,
+    ROOK = 3,
+    QUEEN = 4,
+    KING = 5
 };
 
 Bitboard squareToBitboard(Square square);

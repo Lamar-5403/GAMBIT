@@ -11,6 +11,10 @@ class Position {
         int halfMoveClock;
         int fullMoveNumber;
 
+        void initializeStartingPosition();
+
+        Bitboard& getPieceBoard(Color color, PieceType piece);
+
     public:
         Position();
 };
