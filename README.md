@@ -93,9 +93,9 @@ The least significant bit represents A8, while the most significant bit represen
 
 For example:
 
-`A8 = 0x0000000000000001`
-`E4 = 0x0000001000000000`
-`H1 = 0x8000000000000000`
+`A8 = 0x0000000000000001`   
+`E4 = 0x0000001000000000`   
+`H1 = 0x8000000000000000`   
 
 Piece locations are stored independently by color and piece type.
 
