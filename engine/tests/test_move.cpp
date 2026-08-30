@@ -32,5 +32,23 @@ bool testMakeMove() {
 
     std::cout << "\n";
 
+    unmakeMove(position, move);
+
+    pawns = position.getPieceBoard(Color::WHITE, PieceType::PAWN);
+
+    std::cout << "White Pawns: ";
+
+    for (char file = 'A'; file <= 'H'; file++) {
+        for (int rank = 8; rank >= 1; rank--) {
+            Square square = fileRankToSquare(file, rank);
+
+            if (isSquareSet(pawns, square)) {
+                std::cout << squareToFile(square) << squareToRank(square) << " ";
+            }
+        }
+    }
+
+    std::cout << "\n";
+
     return true;
 }

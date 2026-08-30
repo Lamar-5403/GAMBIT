@@ -11,5 +11,8 @@ void makeMove(Position& position, const Move& move) {
 }
 
 void unmakeMove(Position& position, const Move& move) {
-    
+    Bitboard& pieceBoard = position.getPieceBoard(move.color, move.piece);
+
+    pieceBoard = clearSquare(pieceBoard, move.destination);
+    pieceBoard = setSquare(pieceBoard, move.source);
 }
