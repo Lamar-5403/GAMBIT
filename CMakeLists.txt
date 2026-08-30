@@ -13,8 +13,10 @@ add_executable(gambit
     engine/src/main.cpp 
     engine/src/board.cpp 
     engine/src/position.cpp
+    engine/src/move.cpp
     engine/tests/test_bitboard.cpp
     engine/tests/test_startingPosition.cpp
+    engine/tests/test_move.cpp
 )
 
 target_include_directories(gambit 

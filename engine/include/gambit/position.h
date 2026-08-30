@@ -8,6 +8,7 @@ class Position {
         Position();
 
         friend bool testStartingPosition();
+        friend void makeMove();
 
         Bitboard& getPieceBoard(Color color, PieceType piece);
         const Bitboard& getPieceBoard(Color color, PieceType piece) const;
