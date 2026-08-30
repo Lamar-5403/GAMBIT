@@ -78,22 +78,22 @@ Potential functionality includes:
 
 G.A.M.B.I.T. uses a bitboard representation in which each chess square corresponds to one bit of a 64-bit integer.
 
-A8 B8 C8 D8 E8 F8 G8 H8
-A7 B7 C7 D7 E7 F7 G7 H7
-A6 B6 C6 D6 E6 F6 G6 H6
-A5 B5 C5 D5 E5 F5 G5 H5
-A4 B4 C4 D4 E4 F4 G4 H4
-A3 B3 C3 D3 E3 F3 G3 H3
-A2 B2 C2 D2 E2 F2 G2 H2
-A1 B1 C1 D1 E1 F1 G1 H1
+A8 B8 C8 D8 E8 F8 G8 H8   
+A7 B7 C7 D7 E7 F7 G7 H7   
+A6 B6 C6 D6 E6 F6 G6 H6   
+A5 B5 C5 D5 E5 F5 G5 H5   
+A4 B4 C4 D4 E4 F4 G4 H4   
+A3 B3 C3 D3 E3 F3 G3 H3   
+A2 B2 C2 D2 E2 F2 G2 H2   
+A1 B1 C1 D1 E1 F1 G1 H1   
 
 The least significant bit represents A8, while the most significant bit represents H1.
 
 For example:
 
-A8 = 0x0000000000000001
-E4 = 0x0000001000000000
-H1 = 0x8000000000000000
+A8 = 0x0000000000000001   
+E4 = 0x0000001000000000   
+H1 = 0x8000000000000000   
 
 Piece locations are stored independently by color and piece type.
 
@@ -177,6 +177,7 @@ Additional test coverage will be added alongside each major subsystem.
 ```
 /docs
 	/01_architecture.md
+
 /engine
 	/include/gambit
 		board.h
