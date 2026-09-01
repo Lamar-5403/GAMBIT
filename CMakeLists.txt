@@ -1,4 +1,3 @@
-```cmake
 cmake_minimum_required(VERSION 3.20)
 
 project(GAMBIT
@@ -28,4 +27,3 @@ target_include_directories(gambit
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/engine/include
 )
-```
