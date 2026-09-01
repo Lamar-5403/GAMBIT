@@ -1,5 +1,4 @@
 #pragma once
-#include <gambit/board.h>
 #include <gambit/position.h>
 #include <optional>
 #include <vector>
