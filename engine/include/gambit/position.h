@@ -2,13 +2,13 @@
 #include <cstdint>
 #include <optional>
 #include <gambit/board.h>
+#include <string>
 
 class Position {
     public:
         Position();
 
-        // friend bool testStartingPosition();
-        // friend void makeMove();
+        friend Position positionFromFEN(std::string);
 
         Bitboard& getPieceBoard(Color color, PieceType piece);
         const Bitboard& getPieceBoard(Color color, PieceType piece) const;

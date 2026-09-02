@@ -98,3 +98,17 @@ void Position::initializeStartingPosition() {
     getPieceBoard(Color::BLACK, PieceType::KING) = 
         squareToBitboard(Square::E8);
 }
+
+Position positionFromFEN(std::string FENstring) {
+    //pieces on board
+    for (char c : FENstring) {
+        
+    }
+
+    // parse through text up to space character ignoring /
+
+    // after the space get the character and set side to move
+    char sideToMove;
+
+    
+}
