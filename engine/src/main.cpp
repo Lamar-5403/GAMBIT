@@ -4,6 +4,7 @@ bool testFile();
 bool testStartingPosition();
 bool testFileRankToSquare();
 bool testMakeMove();
+bool testForwardPawnMove();
 
 int main() {
     bool passed = true;
@@ -14,6 +15,7 @@ int main() {
     passed &= testStartingPosition();
     passed &= testFileRankToSquare();
     passed &= testMakeMove();
+    passed &= testForwardPawnMove();
 
     return passed ? 0 : 1;
 }

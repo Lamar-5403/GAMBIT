@@ -24,7 +24,7 @@ bool testMakeMove() {
         for (int rank = 8; rank >= 1; rank--) {
             Square square = fileRankToSquare(file, rank);
 
-            if (isSquareSet(pawns, square)) {
+            if (isSquareOccupied(pawns, square)) {
                 std::cout << squareToFile(square) << squareToRank(square) << " ";
             }
         }
@@ -42,13 +42,34 @@ bool testMakeMove() {
         for (int rank = 8; rank >= 1; rank--) {
             Square square = fileRankToSquare(file, rank);
 
-            if (isSquareSet(pawns, square)) {
+            if (isSquareOccupied(pawns, square)) {
                 std::cout << squareToFile(square) << squareToRank(square) << " ";
             }
         }
     }
 
     std::cout << "\n";
+
+    return true;
+}
+
+bool testForwardPawnMove() {
+    Position position;
+
+    std::vector<Move> moves;
+
+    generatePawnMoves(position, moves);
+
+    for (const Move& move : moves) {
+        std::cout   << squareToFile(move.source)
+                    << squareToRank(move.source)
+                    << " -> "
+                    <<squareToFile(move.destination)
+                    <<squareToRank(move.destination)
+                    << "\n";
+    }
+
+    std::cout << "Total moves: " << moves.size() << "\n";
 
     return true;
 }
