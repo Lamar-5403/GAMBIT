@@ -37,12 +37,8 @@ Color Position::getSideToMove() const {
     return sideToMove;
 }
 
-const Square* Position::getEnPassantSquare() const {
-    if (enPassantSquare.has_value()) {
-        return &(*enPassantSquare);
-    }
-
-    return nullptr;
+std::optional<Square> Position::getEnPassantSquare() const {
+    return enPassantSquare;
 }
 
 void Position::initializeStartingPosition() {

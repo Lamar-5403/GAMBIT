@@ -19,7 +19,6 @@ void unmakeMove(Position& position, const Move& move) {
 void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
     Color color = position.getSideToMove();
 
-    Bitboard friendlyOccupancy = position.getOccupancy(color);
     Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
     Bitboard allOccupancy = position.getAllOccupancy();
 
@@ -41,7 +40,7 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
         Square twoSquareDestination = static_cast<Square>(static_cast<int>(source) + 2 * direction);
         Square aFileDestination = static_cast<Square>(static_cast<int>(source) + (direction - 1));
         Square hFileDestination = static_cast<Square>(static_cast<int>(source) + (direction + 1));
-        
+
         // standard pawn push
         if (!isSquareOccupied(allOccupancy, oneSquareDestination)) {
             if (squareToRank(oneSquareDestination) == promotionRank) {
@@ -152,7 +151,38 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
             } 
         }
 
+        //en passant
+        std::optional<Square> targetSquare = position.getEnPassantSquare();
 
+        if (targetSquare) {
+            Square target = *targetSquare;
+
+            if (file != 'A' && aFileDestination == target && isSquareOccupied(enemyOccupancy, static_cast<Square>(static_cast<int>(source) - 1))) {
+                Move move {
+                    source,
+                    aFileDestination,
+                    color,
+                    PieceType::PAWN,
+                    MoveType::EN_PASSANT,
+                    std::nullopt
+                };
+
+                moves.push_back(move);
+            }
+
+            if (file != 'H' && hFileDestination == target && isSquareOccupied(enemyOccupancy, static_cast<Square>(static_cast<int>(source) + 1))) {
+                Move move {
+                    source,
+                    hFileDestination,
+                    color,
+                    PieceType::PAWN,
+                    MoveType::EN_PASSANT,
+                    std::nullopt
+                };
+
+                moves.push_back(move);
+            }
+        }
 
         pawns &= pawns - 1;
     }

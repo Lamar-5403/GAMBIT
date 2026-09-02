@@ -16,7 +16,7 @@ class Position {
         Bitboard getAllOccupancy() const;
 
         Color getSideToMove() const;
-        const Square* getEnPassantSquare() const;
+        std::optional<Square> getEnPassantSquare() const;
 
     private:
         Bitboard pieces[2][6];
