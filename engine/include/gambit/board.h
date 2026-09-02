@@ -38,4 +38,4 @@ Square fileRankToSquare(char file, int rank);
 bool isValidSquare(Square square);
 Bitboard setSquare(Bitboard board, Square square);
 Bitboard clearSquare(Bitboard board, Square square);
-bool isSquareSet(Bitboard board, Square square);
+bool isSquareOccupied(Bitboard board, Square square);

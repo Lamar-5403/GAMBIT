@@ -19,6 +19,32 @@ const Bitboard& Position::getPieceBoard(Color color, PieceType piece) const {
     return pieces[static_cast<uint8_t>(color)][static_cast<uint8_t>(piece)];
 }
 
+Bitboard Position::getOccupancy(Color color) const {
+    Bitboard board = 0;
+
+    for (int i = 0; i < 6; i++) {
+        board |= pieces[static_cast<int>(color)][i];
+    }
+
+    return board;
+}
+
+Bitboard Position::getAllOccupancy() const {
+    return getOccupancy(Color::WHITE) | getOccupancy(Color::BLACK);
+}
+
+Color Position::getSideToMove() const {
+    return sideToMove;
+}
+
+const Square* Position::getEnPassantSquare() const {
+    if (enPassantSquare.has_value()) {
+        return &(*enPassantSquare);
+    }
+
+    return nullptr;
+}
+
 void Position::initializeStartingPosition() {
     getPieceBoard(Color::WHITE, PieceType::PAWN) = 
         squareToBitboard(Square::A2) | 

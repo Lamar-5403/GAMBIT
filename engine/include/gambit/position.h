@@ -7,11 +7,16 @@ class Position {
     public:
         Position();
 
-        friend bool testStartingPosition();
-        friend void makeMove();
+        // friend bool testStartingPosition();
+        // friend void makeMove();
 
         Bitboard& getPieceBoard(Color color, PieceType piece);
         const Bitboard& getPieceBoard(Color color, PieceType piece) const;
+        Bitboard getOccupancy(Color color) const;
+        Bitboard getAllOccupancy() const;
+
+        Color getSideToMove() const;
+        const Square* getEnPassantSquare() const;
 
     private:
         Bitboard pieces[2][6];

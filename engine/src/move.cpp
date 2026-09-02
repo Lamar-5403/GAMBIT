@@ -1,6 +1,4 @@
 #include <gambit/move.h>
-#include <gambit/board.h>
-#include <gambit/position.h>
 #include <optional>
 #include <bit>
 
@@ -19,49 +17,153 @@ void unmakeMove(Position& position, const Move& move) {
 }
 
 void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
-    for (Color color : {Color::WHITE, Color::BLACK}) {
-        Bitboard pawns = position.getPieceBoard(color, PieceType::PAWN);
+    Color color = position.getSideToMove();
 
-        int direction = (color == Color::WHITE) ? -8 : 8;
-        int startingRank = (color == Color::WHITE) ? 2 : 7;
+    Bitboard friendlyOccupancy = position.getOccupancy(color);
+    Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
+    Bitboard allOccupancy = position.getAllOccupancy();
 
-        while (pawns != 0) {
-            int squareIndex = std::countr_zero(pawns);
+    Bitboard pawns = position.getPieceBoard(color, PieceType::PAWN);
+    PieceType promotionPieces[4] = {PieceType::BISHOP, PieceType::KNIGHT, PieceType::ROOK, PieceType::QUEEN};
 
-            Square source = static_cast<Square>(squareIndex);
-            Square destination;
+    int direction = (color == Color::WHITE) ? -BOARD_SIZE : BOARD_SIZE;
+    int startingRank = (color == Color::WHITE) ? 2 : 7;
+    int promotionRank = (color == Color::WHITE) ? 8 : 1;
 
-            if (squareToRank(source) == startingRank) {
-                // move 2*direction == pseudo-legal
-                destination = static_cast<Square>(static_cast<int>(source) + 2 * direction);
+    while (pawns != 0) {
+        int squareIndex = std::countr_zero(pawns);
 
+        Square source = static_cast<Square>(squareIndex);
+        int rank = squareToRank(source);
+        char file = squareToFile(source);
+
+        Square destination = static_cast<Square>(static_cast<int>(source) + direction);
+
+        // standard pawn push
+        if (!isSquareOccupied(allOccupancy, destination)) {
+            if (squareToRank(destination) == promotionRank) {
+
+                for (PieceType promotionPiece : promotionPieces) {
+                    Move move {
+                        source,
+                        destination,
+                        color,
+                        PieceType::PAWN,
+                        MoveType::PROMOTION,
+                        promotionPiece
+                    };
+
+                    moves.push_back(move);
+                }
+
+            } else {
                 Move move {
                     source,
                     destination,
                     color,
                     PieceType::PAWN,
-                    MoveType::DOUBLE_PAWN_PUSH,
+                    MoveType::QUIET,
                     std::nullopt
                 };
 
                 moves.push_back(move);
+
+                if (rank == startingRank && (!isSquareOccupied(allOccupancy, static_cast<Square>(static_cast<int>(source) + 2*direction)))) {
+                    destination = static_cast<Square>(static_cast<int>(source) + 2*direction);
+
+                    Move move {
+                        source,
+                        destination,
+                        color,
+                        PieceType::PAWN,
+                        MoveType::DOUBLE_PAWN_PUSH,
+                        std::nullopt
+                    };
+
+                    moves.push_back(move);
+                }
             }
+            
+        }
 
-            destination = static_cast<Square>(static_cast<int>(source) + direction);
-
+        
+        //pawn capture
+        if (isSquareOccupied(enemyOccupancy, static_cast<Square>(static_cast<int>(source) + (direction - 1)))) {
             Move move {
                 source,
                 destination,
                 color,
                 PieceType::PAWN,
-                MoveType::QUIET,
+                MoveType::CAPTURE,
                 std::nullopt
             };
 
             moves.push_back(move);
+        } else if (isSquareSet(position.getOccupancy(Color::BLACK), static_cast<Square>(static_cast<int>(source) + (direction + 1)))) {
+            Move move {
+                source,
+                destination,
+                color,
+                PieceType::PAWN,
+                MoveType::CAPTURE,
+                std::nullopt
+            };
 
-            pawns &= pawns - 1;
+            moves.push_back(move);
         }
+
+
+
+
+
+
+
+
+
+
+        // promotion capture
+        if (isSquareSet(position.getOccupancy(Color::BLACK), static_cast<Square>(static_cast<int>(source) + (BOARD_SIZE - 1))) && squareToRank(static_cast<Square>(static_cast<int>(source) + 8)) == 8) {
+            Move move {
+                source,
+                destination,
+                color,
+                PieceType::PAWN,
+                MoveType::PROMOTION_CAPTURE,
+                PieceType::QUEEN      // soon to implement a menu option for other pieceTypes
+            };
+
+            moves.push_back(move);
+        } else if (isSquareSet(position.getOccupancy(Color::BLACK), static_cast<Square>(static_cast<int>(source) + (BOARD_SIZE + 1))) && squareToRank(static_cast<Square>(static_cast<int>(source) + 8)) == 8) {
+            Move move {
+                source,
+                destination,
+                color,
+                PieceType::PAWN,
+                MoveType::PROMOTION_CAPTURE,
+                PieceType::QUEEN      // soon to implement a menu option for other pieceTypes
+            };
+
+            moves.push_back(move);
+        }
+
+        //en passant
+        const Square* enPassantSquare = position.getEnPassantSquare();
+
+        if (enPassantSquare != nullptr) {
+            Move move {
+                source,
+                *enPassantSquare,
+                color,
+                PieceType::PAWN,
+                MoveType::EN_PASSANT,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+        }
+
+
+        pawns &= pawns - 1;
     }
 }
 

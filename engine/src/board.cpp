@@ -29,6 +29,6 @@ Bitboard clearSquare(Bitboard board, Square square) {
     return board &= ~squareToBitboard(square);
 }
 
-bool isSquareSet(Bitboard board, Square square) {
+bool isSquareOccupied(Bitboard board, Square square) {
     return (board & squareToBitboard(square)) != 0;
 }
