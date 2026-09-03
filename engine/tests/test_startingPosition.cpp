@@ -16,7 +16,7 @@ constexpr Bitboard BLACK_QUEEN   = 0x0000000000000008ULL;
 constexpr Bitboard BLACK_KING    = 0x0000000000000010ULL;
 
 bool testStartingPosition() {
-    Position position;
+    Position position = Position::starting();
 
     if (position.getPieceBoard(Color::WHITE, PieceType::PAWN) != WHITE_PAWNS) {
         std::cout << "White pawns failed.\n";
