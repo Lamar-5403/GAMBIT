@@ -82,3 +82,43 @@ bool testStartingPosition() {
     return true;
 }
 
+bool testPositionFromFEN() {
+    std::string fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    Position fenPosition = positionFromFEN(fenString);
+    Position startingPosition = Position::starting();
+
+    int failed = 0;
+
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 6; j++) {
+            if (fenPosition.getPieceBoard(static_cast<Color>(i), static_cast<PieceType>(j)) != startingPosition.getPieceBoard(static_cast<Color>(i), static_cast<PieceType>(j))) {
+                failed += 1;
+            }
+        }
+    }
+
+    if (fenPosition.getSideToMove() != Color::WHITE) 
+        failed += 1;
+
+    if (fenPosition.getCastlingRights() != 0b00001111) 
+        failed += 1;
+
+    if (fenPosition.getEnPassantSquare() != std::nullopt) 
+        failed += 1;
+
+    if (fenPosition.getHalfMoveClock() != 0) 
+        failed += 1;
+
+    if (fenPosition.getFullMoveNumber() != 1) 
+        failed += 1;
+
+    if (failed != 0) {
+        std::cout << "FAIL: FEN Position\n";
+        return false;
+    }
+
+
+    std::cout << "PASS: FEN Position\n";
+    return true;
+
+}

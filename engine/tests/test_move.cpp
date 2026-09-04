@@ -54,7 +54,7 @@ bool testMakeMove() {
 }
 
 bool testForwardPawnMove() {
-    Position position;
+    Position position = Position::starting();
 
     std::vector<Move> moves;
 

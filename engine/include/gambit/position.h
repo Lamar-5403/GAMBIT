@@ -33,3 +33,5 @@ class Position {
         
         void initializeStartingPosition();
 };
+
+Position positionFromFEN(std::string FENstring);

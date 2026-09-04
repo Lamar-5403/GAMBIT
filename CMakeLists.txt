@@ -17,8 +17,8 @@ add_executable(gambit
     engine/src/position.cpp
     engine/src/move.cpp
 
-    engine/tests/test_bitboard.cpp
-    engine/tests/test_startingPosition.cpp
+    engine/tests/test_board.cpp
+    engine/tests/test_position.cpp
     engine/tests/test_move.cpp
 )
 
