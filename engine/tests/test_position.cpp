@@ -1,5 +1,6 @@
 #include <gambit/position.h>
 #include <iostream>
+#include <bitset>
 
 constexpr Bitboard WHITE_PAWNS   = 0x00FF000000000000ULL;
 constexpr Bitboard WHITE_ROOKS   = 0x8100000000000000ULL;
@@ -82,7 +83,7 @@ bool testStartingPosition() {
     return true;
 }
 
-bool testPositionFromFEN() {
+bool testStartingPositionFromFEN() {
     std::string fenString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     Position fenPosition = positionFromFEN(fenString);
     Position startingPosition = Position::starting();
@@ -91,26 +92,39 @@ bool testPositionFromFEN() {
 
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 6; j++) {
-            if (fenPosition.getPieceBoard(static_cast<Color>(i), static_cast<PieceType>(j)) != startingPosition.getPieceBoard(static_cast<Color>(i), static_cast<PieceType>(j))) {
+            Bitboard fenBoard = fenPosition.getPieceBoard(static_cast<Color>(i), static_cast<PieceType>(j));
+            Bitboard startBoard = startingPosition.getPieceBoard(static_cast<Color>(i), static_cast<PieceType>(j));
+            if (fenBoard != startBoard) {
+                std::cout << static_cast<Color>(i) << " " <<static_cast<PieceType>(j) << " failed. Expected: " << startBoard << ". Got: " << fenBoard << "\n";
                 failed += 1;
             }
         }
     }
 
-    if (fenPosition.getSideToMove() != Color::WHITE) 
+    if (fenPosition.getSideToMove() != Color::WHITE) {
+        std::cout << "Expected White. Got " << fenPosition.getSideToMove() << "\n";
         failed += 1;
+    }
 
-    if (fenPosition.getCastlingRights() != 0b00001111) 
+    if (fenPosition.getCastlingRights() != 0b00001111) {
+        std::cout << "Expected: " << std::bitset<8>(0b00001111) << ". Got: " << std::bitset<8>(fenPosition.getCastlingRights()) << "\n";
         failed += 1;
+    }
 
-    if (fenPosition.getEnPassantSquare() != std::nullopt) 
+    if (fenPosition.getEnPassantSquare() != std::nullopt) {
+        std::cout << "Expected: NULL. Got: Target Square\n";
         failed += 1;
+    }
 
-    if (fenPosition.getHalfMoveClock() != 0) 
+    if (fenPosition.getHalfMoveClock() != 0) {
+        std::cout << "Expected: 0. Got: " << fenPosition.getHalfMoveClock() << "\n";
         failed += 1;
+    }
 
-    if (fenPosition.getFullMoveNumber() != 1) 
+    if (fenPosition.getFullMoveNumber() != 1) {
+        std::cout << "Expected: 1. Got: " << fenPosition.getFullMoveNumber() << "\n";
         failed += 1;
+    }
 
     if (failed != 0) {
         std::cout << "FAIL: FEN Position\n";
@@ -121,4 +135,10 @@ bool testPositionFromFEN() {
     std::cout << "PASS: FEN Position\n";
     return true;
 
+}
+
+bool testPositionFromFEN() {
+    
+
+    return true;
 }

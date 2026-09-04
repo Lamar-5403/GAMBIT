@@ -3,7 +3,7 @@
 #include <iostream>
 
 bool testMakeMove() {
-    Position position;
+    Position position = Position::starting();
 
     Move move {
         Square::E2,
@@ -61,12 +61,7 @@ bool testForwardPawnMove() {
     generatePawnMoves(position, moves);
 
     for (const Move& move : moves) {
-        std::cout   << squareToFile(move.source)
-                    << squareToRank(move.source)
-                    << " -> "
-                    <<squareToFile(move.destination)
-                    <<squareToRank(move.destination)
-                    << "\n";
+        std::cout << move << "\n";
     }
 
     std::cout << "Total moves: " << moves.size() << "\n";

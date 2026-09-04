@@ -2,6 +2,11 @@
 #include <optional>
 #include <bit>
 
+std::ostream& operator<<(std::ostream& os, Move move) {
+    os << move.color << " " << move.piece << ": " << move.source << " -> " << move.destination;
+    return os;
+}
+
 void makeMove(Position& position, const Move& move) {
     Bitboard& pieceBoard = position.getPieceBoard(move.color, move.piece);
 

@@ -22,6 +22,8 @@ struct Move {
     std::optional<PieceType> promotionPiece;
 };
 
+std::ostream& operator<<(std::ostream& os, Move move);
+
 void makeMove(Position& position, const Move& move);
 void unmakeMove(Position& position, const Move& move);
 

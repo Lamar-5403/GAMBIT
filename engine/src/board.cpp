@@ -1,5 +1,50 @@
 #include <gambit/board.h>
 
+std::ostream& operator<<(std::ostream& os, Square square) {
+    os << squareToFile(square);
+    os << static_cast<char>('0' + squareToRank(square));
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, Color color) {
+    (color == Color::WHITE) ? os << "White" : os << "Black";
+    return os;
+}
+
+std::ostream& operator<<(std::ostream& os, PieceType piece) {
+    switch (piece) {
+        case PieceType::PAWN:
+            os << "Pawn";
+        break;
+
+        case PieceType::KNIGHT:
+            os << "Knight";
+        break;
+
+        case PieceType::BISHOP:
+            os << "Bishop";
+        break;
+
+        case PieceType::ROOK:
+            os << "Rook";
+        break;
+
+        case PieceType::QUEEN:
+            os << "Queen";
+        break;
+
+        case PieceType::KING:
+            os << "King";
+        break;
+
+        default:
+            os << "Undefined Piece Type";
+        break;
+    }
+
+    return os;
+}
+
 Bitboard squareToBitboard(Square square) {
     return 1ULL << static_cast<int>(square);
 }
@@ -14,11 +59,6 @@ char squareToFile(Square square) {
 
 Square fileRankToSquare(char file, int rank) {
     return static_cast<Square>(NUM_SQUARES - (BOARD_SIZE * rank) + (file - 'A'));
-}
-
-bool isValidSquare(Square square) {
-    // actual implementation deffered for now, placeholder function
-    return true;
 }
 
 Bitboard setSquare(Bitboard board, Square square){
