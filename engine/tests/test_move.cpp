@@ -68,3 +68,19 @@ bool testForwardPawnMove() {
 
     return true;
 }
+
+bool testPseudoLegalPawnMoves() {
+    Position position = positionFromFEN("r3kb1r/pbpqp1P1/1pn5/PB1pPp1p/3Pn3/5N1p/1PP2P2/RNBQK2R w KQkq f6 0 2");
+
+    std::vector<Move> moves;
+
+    generatePawnMoves(position, moves);
+
+    for (const Move& move : moves) {
+        std::cout << move << "\n";
+    }
+
+    std::cout << "Total moves: " << moves.size() << "\n";
+
+    return true;
+}
