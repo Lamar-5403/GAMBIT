@@ -1,4 +1,5 @@
 #include <gambit/board.h>
+#include <cctype>
 
 std::ostream& operator<<(std::ostream& os, Square square) {
     os << squareToFile(square);
@@ -58,7 +59,7 @@ char squareToFile(Square square) {
 }
 
 Square fileRankToSquare(char file, int rank) {
-    return static_cast<Square>(NUM_SQUARES - (BOARD_SIZE * rank) + (file - 'A'));
+    return static_cast<Square>(NUM_SQUARES - (BOARD_SIZE * rank) + (std::toupper(file) - 'A'));
 }
 
 Bitboard setSquare(Bitboard board, Square square){
