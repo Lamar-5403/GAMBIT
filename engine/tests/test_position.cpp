@@ -138,7 +138,112 @@ bool testStartingPositionFromFEN() {
 }
 
 bool testPositionFromFEN() {
-    
+    std::string fenString = "r3k2r/p1ppq1b1/4pppp/4P3/PpNP4/2P2QP1/1P3P1P/R4RK1 b kq a3 0 15";
+    Position fenPosition = positionFromFEN(fenString);
+    int failed = 0;
+
+    Bitboard whitePawns = 0x00A2440910000000;
+    Bitboard whiteKnights = 0x0000000400000000;
+    Bitboard whiteBishops = 0;
+    Bitboard whiteRooks = 0x2100000000000000;
+    Bitboard whiteQueen = 0x0000200000000000;
+    Bitboard whiteKing = 0x4000000000000000;
+
+    Bitboard blackPawns = 0x0000000200F00D00;
+    Bitboard blackKnights = 0;
+    Bitboard blackBishops = 0x0000000000004000;
+    Bitboard blackRooks = 0x0000000000000081;
+    Bitboard blackQueen = 0x0000000000001000;
+    Bitboard blackKing = 0x0000000000000010;
+
+    if (fenPosition.getPieceBoard(Color::WHITE, PieceType::PAWN) != whitePawns) {
+        std::cout << "White pawns failed. Expected: " << std::hex << whitePawns << " Got: " << std::hex << fenPosition.getPieceBoard(Color::WHITE, PieceType::PAWN) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::WHITE, PieceType::KNIGHT) != whiteKnights) {
+        std::cout << "White knights failed. Expected: " << std::hex << whiteKnights << " Got: " << std::hex << fenPosition.getPieceBoard(Color::WHITE, PieceType::KNIGHT) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::WHITE, PieceType::BISHOP) != whiteBishops) {
+        std::cout << "White bishops failed. Expected: " << std::hex << whiteBishops << " Got: " << std::hex << fenPosition.getPieceBoard(Color::WHITE, PieceType::BISHOP) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::WHITE, PieceType::ROOK) != whiteRooks) {
+        std::cout << "White rooks failed. Expected: " << std::hex << whiteRooks << " Got: " << std::hex << fenPosition.getPieceBoard(Color::WHITE, PieceType::ROOK) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::WHITE, PieceType::QUEEN) != whiteQueen) {
+        std::cout << "White queen failed. Expected: " << std::hex << whiteQueen << " Got: " << std::hex << fenPosition.getPieceBoard(Color::WHITE, PieceType::QUEEN) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::WHITE, PieceType::KING) != whiteKing) {
+        std::cout << "White king failed. Expected: " << std::hex << whiteKing << " Got: " << std::hex << fenPosition.getPieceBoard(Color::WHITE, PieceType::KING) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::BLACK, PieceType::PAWN) != blackPawns) {
+        std::cout << "Black pawns failed. Expected: " << std::hex << blackPawns << " Got: " << std::hex << fenPosition.getPieceBoard(Color::BLACK, PieceType::PAWN) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::BLACK, PieceType::KNIGHT) != blackKnights) {
+        std::cout << "Black knights failed. Expected: " << std::hex << blackKnights << " Got: " << std::hex << fenPosition.getPieceBoard(Color::BLACK, PieceType::KNIGHT) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::BLACK, PieceType::BISHOP) != blackBishops) {
+        std::cout << "Black bishops failed. Expected: " << std::hex << blackBishops << " Got: " << std::hex << fenPosition.getPieceBoard(Color::BLACK, PieceType::BISHOP) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::BLACK, PieceType::ROOK) != blackRooks) {
+        std::cout << "Black rooks failed. Expected: " << std::hex << blackRooks << " Got: " << std::hex << fenPosition.getPieceBoard(Color::BLACK, PieceType::ROOK) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::BLACK, PieceType::QUEEN) != blackQueen) {
+        std::cout << "Black queen failed. Expected: " << std::hex << blackQueen << " Got: " << std::hex << fenPosition.getPieceBoard(Color::BLACK, PieceType::QUEEN) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getPieceBoard(Color::BLACK, PieceType::KING) != blackKing) {
+        std::cout << "Black king failed. Expected: " << std::hex << blackKing << " Got: " << std::hex << fenPosition.getPieceBoard(Color::BLACK, PieceType::KING) << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getSideToMove() != Color::BLACK) {
+        std::cout << "Side to move failed. Expected: Black. Got: " << fenPosition.getSideToMove() << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getCastlingRights() != 0b00000011) {
+        std::cout << "Castling rights failed. Expected: " << std::hex << 0b00000011 << ". Got: " << fenPosition.getCastlingRights() << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getEnPassantSquare() != Square::A3) {
+        std::cout << "En Passant target failed. Expected: A3. Got: " << *fenPosition.getEnPassantSquare() << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getHalfMoveClock() != 0) {
+        std::cout << "Half move clock failed. Expected: 0. Got: " << fenPosition.getHalfMoveClock() << "\n";
+        failed += 1;
+    }
+
+    if (fenPosition.getFullMoveNumber() != 15) {
+        std::cout << "Full move number failed. Expected: 15. Got: " << std::dec << fenPosition.getFullMoveNumber() << "\n";
+        failed += 1;
+    }
+
+    if (failed != 0) {
+        return false;
+    }
 
     return true;
 }
