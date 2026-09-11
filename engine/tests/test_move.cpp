@@ -279,3 +279,80 @@ bool testPseudoLegalKnightMoves() {
 
     return true;
 }
+
+bool testStandardKingMoves() {
+    Position position = positionFromFEN("Kr6/8/6k1/8/4NQ2/8/8/8 w - - 0 1");
+
+    std::vector<Move> expectedMoves = {
+        {Square::A8, Square::B8, Color::WHITE, PieceType::KING, MoveType::CAPTURE, std::nullopt},
+        {Square::A8, Square::A7, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::A8, Square::B7, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt}
+    };
+
+    std::vector<Move> actualMoves;
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+
+    position = positionFromFEN("8/6k1/2p5/3Bq3/3Kn3/4R3/8/8 w - - 0 1");
+
+    expectedMoves = {
+        {Square::D4, Square::C5, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::D4, Square::E5, Color::WHITE, PieceType::KING, MoveType::CAPTURE, std::nullopt},
+        {Square::D4, Square::C4, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::D4, Square::E4, Color::WHITE, PieceType::KING, MoveType::CAPTURE, std::nullopt},
+        {Square::D4, Square::C3, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::D4, Square::D3, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+
+    position = positionFromFEN("8/2K5/8/8/6N1/7k/6r1/8 b - - 0 1");
+
+    expectedMoves = {
+        {Square::H3, Square::G4, Color::BLACK, PieceType::KING, MoveType::CAPTURE, std::nullopt},
+        {Square::H3, Square::H4, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::H3, Square::G3, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::H3, Square::H2, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    std::cout << "PASS: Standard King moves.\n";
+    return true;
+}
