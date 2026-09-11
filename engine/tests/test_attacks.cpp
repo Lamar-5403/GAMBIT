@@ -101,3 +101,38 @@ bool testKnightAttackTable() {
     std::cout << "PASS: Knight attack table.\n";
     return true;
 }
+
+bool testKingAttackTable() {
+    attacks::initializeKingAttackTable();
+
+    if (attacks::kingAttackTable[static_cast<int>(Square::A8)] !=
+    (squareToBitboard(Square::B8) |
+    squareToBitboard(Square::A7) |
+    squareToBitboard(Square::B7))) {
+        return false;
+    }
+
+    if (attacks::kingAttackTable[static_cast<int>(Square::D4)] !=
+    (squareToBitboard(Square::C5) |
+    squareToBitboard(Square::D5) |
+    squareToBitboard(Square::E5) |
+    squareToBitboard(Square::C4) |
+    squareToBitboard(Square::E4) |
+    squareToBitboard(Square::C3) |
+    squareToBitboard(Square::D3) |
+    squareToBitboard(Square::E3))) {
+        return false;
+    }
+
+    if (attacks::kingAttackTable[static_cast<int>(Square::H3)] !=
+    (squareToBitboard(Square::G4) |
+    squareToBitboard(Square::H4) |
+    squareToBitboard(Square::G3) |
+    squareToBitboard(Square::G2) |
+    squareToBitboard(Square::H2))) {
+        return false;
+    }
+
+    std::cout << "PASS: King attack table.\n";
+    return true;
+}

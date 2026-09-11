@@ -11,6 +11,7 @@ bool testWhitePawnAttackTable();
 bool testBlackPawnAttackTable();
 bool testPseudoLegalPawnMoves();
 bool testKnightAttackTable();
+bool testKingAttackTable();
 bool testPseudoLegalKnightMoves();
 bool testEnPassant();
 
@@ -30,6 +31,7 @@ int main() {
     passed &= testBlackPawnAttackTable();
     passed &= testPseudoLegalPawnMoves();
     passed &= testKnightAttackTable();
+    passed &= testKingAttackTable();
     passed &= testPseudoLegalKnightMoves();
     passed &= testEnPassant();
     return passed ? 0 : 1;

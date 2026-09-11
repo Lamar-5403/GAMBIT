@@ -80,5 +80,36 @@ namespace attacks {
         }
     }
 
-    
+    const std::array<std::pair<int, int>, 8> kingOffsets = {{
+        {-1,  -1},
+        { 0,  -1},
+        { 1,  -1},
+        {-1,   0},
+        { 1,   0},
+        {-1,   1},
+        { 0,   1},
+        { 1,   1}
+    }};
+
+    void initializeKingAttackTable() {
+        for (int i = 0; i < NUM_SQUARES; i++) {
+            Bitboard attackSquares = 0;
+            char file = squareToFile(static_cast<Square>(i));
+            int rank = squareToRank(static_cast<Square>(i));
+
+            for (const auto& [rankOffset, fileOffset] : kingOffsets) {
+                int destinationRank = rank + rankOffset;
+                char destinationFile = file + fileOffset;
+
+                if (destinationRank >= 1 && destinationRank <= 8) {
+                    if (destinationFile >= 'A' && destinationFile <= 'H') {
+                        attackSquares |= squareToBitboard(fileRankToSquare(destinationFile, destinationRank));
+                    }
+                }
+            }
+
+            kingAttackTable[i] = attackSquares;
+        }
+    }
+
 }
