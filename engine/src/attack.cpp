@@ -2,7 +2,31 @@
 
 namespace attacks {
 
+    std::array<Bitboard, NUM_SQUARES> whitePawnAttackTable = {0};
+    std::array<Bitboard, NUM_SQUARES> blackPawnAttackTable = {0};
     std::array<Bitboard, NUM_SQUARES> knightAttackTable = {0};
+    std::array<Bitboard, NUM_SQUARES> kingAttackTable = {0};
+
+    void initializeWhitePawnAttackTable() {
+        for (int i = 0; i < NUM_SQUARES; i++) {
+            Bitboard attackSquares = 0;
+            char file = squareToFile(static_cast<Square>(i));
+            int rank = squareToRank(static_cast<Square>(i));
+
+            if (rank > 1) {
+                if (file != 'A') {
+                    attackSquares |= squareToBitboard(static_cast<Square>(i - 9));
+                }
+
+                if (file != 'H') {
+                    attackSquares |= squareToBitboard(static_cast<Square>(i - 7));
+                }
+            }
+
+            whitePawnAttackTable[i] = attackSquares;
+        }
+    }
+
 
     const std::array<std::pair<int, int>, 8> knightOffsets = {{
         {-2, -1},
