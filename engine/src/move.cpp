@@ -27,6 +27,7 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
 
     Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
     Bitboard allOccupancy = position.getAllOccupancy();
+    Bitboard enemyPawns = position.getPieceBoard(color == Color::WHITE ? Color::BLACK : Color::WHITE, PieceType::PAWN);
 
     Bitboard pawns = position.getPieceBoard(color, PieceType::PAWN);
     PieceType promotionPieces[4] = {PieceType::BISHOP, PieceType::KNIGHT, PieceType::ROOK, PieceType::QUEEN};
@@ -40,12 +41,9 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
 
         Square source = static_cast<Square>(squareIndex);
         int rank = squareToRank(source);
-        char file = squareToFile(source);
 
         Square oneSquareDestination = static_cast<Square>(static_cast<int>(source) + direction);
         Square twoSquareDestination = static_cast<Square>(static_cast<int>(source) + 2 * direction);
-        Square aFileDestination = static_cast<Square>(static_cast<int>(source) + (direction - 1));
-        Square hFileDestination = static_cast<Square>(static_cast<int>(source) + (direction + 1));
 
         // standard pawn push
         if (!isSquareOccupied(allOccupancy, oneSquareDestination)) {
@@ -93,80 +91,18 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
             
         }
 
-        //pawn captures toward a file
-        if (squareToFile(source) != 'A') {
-            if (isSquareOccupied(enemyOccupancy, aFileDestination)) {
-                if (squareToRank(aFileDestination) == promotionRank) {
-                    for (PieceType promotionPiece : promotionPieces) {
-                        Move move {
-                            source,
-                            aFileDestination,
-                            color,
-                            PieceType::PAWN,
-                            MoveType::PROMOTION_CAPTURE,
-                            promotionPiece
-                        };
-
-                        moves.push_back(move);
-                    }
-
-                } else {
-                    Move move {
-                        source,
-                        aFileDestination,
-                        color,
-                        PieceType::PAWN,
-                        MoveType::CAPTURE,
-                        std::nullopt
-                    };
-
-                    moves.push_back(move);
-                }
-            } 
-        }
-
-        //pawn capture toward h file
-        if (squareToFile(source) != 'H') {
-            if (isSquareOccupied(enemyOccupancy, hFileDestination)) {
-                if (squareToRank(hFileDestination) == promotionRank) {
-                    for (PieceType promotionPiece : promotionPieces) {
-                        Move move {
-                            source,
-                            hFileDestination,
-                            color,
-                            PieceType::PAWN,
-                            MoveType::PROMOTION_CAPTURE,
-                            promotionPiece
-                        };
-
-                        moves.push_back(move);
-                    }
-
-                } else {
-                    Move move {
-                        source,
-                        hFileDestination,
-                        color,
-                        PieceType::PAWN,
-                        MoveType::CAPTURE,
-                        std::nullopt
-                    };
-
-                    moves.push_back(move);
-                }
-            } 
-        }
-
-        //en passant
+        Bitboard attackSquares = (color == Color::WHITE) ? attacks::whitePawnAttackTable[squareIndex] : attacks::blackPawnAttackTable[squareIndex];
         std::optional<Square> targetSquare = position.getEnPassantSquare();
 
         if (targetSquare) {
             Square target = *targetSquare;
-
-            if (file != 'A' && aFileDestination == target && isSquareOccupied(enemyOccupancy, static_cast<Square>(static_cast<int>(source) - 1))) {
+            
+            int capturedPawnOffset = (color == Color::WHITE) ? 8 : -8;
+            
+            if ((squareToBitboard(target) & attackSquares) && (isSquareOccupied(enemyPawns, static_cast<Square>(static_cast<int>(target) + capturedPawnOffset)))) {
                 Move move {
                     source,
-                    aFileDestination,
+                    target,
                     color,
                     PieceType::PAWN,
                     MoveType::EN_PASSANT,
@@ -175,19 +111,40 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
 
                 moves.push_back(move);
             }
+        }
 
-            if (file != 'H' && hFileDestination == target && isSquareOccupied(enemyOccupancy, static_cast<Square>(static_cast<int>(source) + 1))) {
+        attackSquares &= enemyOccupancy;
+
+        while (attackSquares != 0) {
+            int destinationSquare = std::countr_zero(attackSquares);
+
+            if (squareToRank(static_cast<Square>(destinationSquare)) == promotionRank) {
+                for (PieceType promotionPiece : promotionPieces) {
+                        Move move {
+                            source,
+                            static_cast<Square>(destinationSquare),
+                            color,
+                            PieceType::PAWN,
+                            MoveType::PROMOTION_CAPTURE,
+                            promotionPiece
+                        };
+
+                        moves.push_back(move);
+                }
+            } else {
                 Move move {
-                    source,
-                    hFileDestination,
-                    color,
-                    PieceType::PAWN,
-                    MoveType::EN_PASSANT,
-                    std::nullopt
-                };
+                        source,
+                        static_cast<Square>(destinationSquare),
+                        color,
+                        PieceType::PAWN,
+                        MoveType::CAPTURE,
+                        std::nullopt
+                    };
 
-                moves.push_back(move);
+                    moves.push_back(move);
             }
+
+            attackSquares &= attackSquares - 1;
         }
 
         pawns &= pawns - 1;

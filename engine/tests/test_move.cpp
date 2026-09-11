@@ -70,6 +70,138 @@ bool testForwardPawnMove() {
     return true;
 }
 
+bool testEnPassant() {
+    Position position = positionFromFEN("rnbqkbnr/ppp2ppp/4p3/3pP3/8/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 3");
+    Move expectedMove = {
+        Square::E5,
+        Square::D6,
+        Color::WHITE,
+        PieceType::PAWN,
+        MoveType::EN_PASSANT,
+        std::nullopt
+    };
+
+    std::vector<Move> moves;
+
+    generatePawnMoves(position, moves);
+    int enPassantMovesFound = 0;
+
+    for (const Move& move : moves) {
+        if (move.type == MoveType::EN_PASSANT) {
+            ++enPassantMovesFound;
+
+            if (move != expectedMove) {
+                std::cout << move << "\n";
+                return false;
+            }
+
+            std::cout << move << "\n";
+        }
+    }
+
+    if (enPassantMovesFound != 1) {
+        return false;
+    }
+
+    moves.clear();
+
+    position = positionFromFEN("rnbqkbnr/pppp2pp/4p3/4Pp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3");
+    expectedMove = {
+        Square::E5,
+        Square::F6,
+        Color::WHITE,
+        PieceType::PAWN,
+        MoveType::EN_PASSANT,
+        std::nullopt
+    };
+
+    generatePawnMoves(position, moves);
+    enPassantMovesFound = 0;
+
+    for (const Move& move : moves) {
+        if (move.type == MoveType::EN_PASSANT) {
+            ++enPassantMovesFound;
+
+            if (move != expectedMove) {
+                std::cout << move << "\n";
+                return false;
+            }
+
+            std::cout << move << "\n";
+        }
+    }
+
+    if (enPassantMovesFound != 1) {
+        return false;
+    }
+
+    moves.clear();
+
+    position = positionFromFEN("rnbqkbnr/ppp1pppp/8/8/3pP3/3P4/PPP2PPP/RNBQKBNR b KQkq e3 0 3");
+    expectedMove = {
+        Square::D4,
+        Square::E3,
+        Color::BLACK,
+        PieceType::PAWN,
+        MoveType::EN_PASSANT,
+        std::nullopt
+    };
+
+    generatePawnMoves(position, moves);
+    enPassantMovesFound = 0;
+
+    for (const Move& move : moves) {
+        if (move.type == MoveType::EN_PASSANT) {
+            ++enPassantMovesFound;
+
+            if (move != expectedMove) {
+                std::cout << move << "\n";
+                return false;
+            }
+
+            std::cout << move << "\n";
+        }
+    }
+
+    if (enPassantMovesFound != 1) {
+        return false;
+    }
+
+    moves.clear();
+
+    position = positionFromFEN("rnbqkbnr/ppp1pppp/8/8/2Pp4/3P4/PP2PPPP/RNBQKBNR b KQkq c3 0 3");
+    expectedMove = {
+        Square::D4,
+        Square::C3,
+        Color::BLACK,
+        PieceType::PAWN,
+        MoveType::EN_PASSANT,
+        std::nullopt
+    };
+
+    generatePawnMoves(position, moves);
+    enPassantMovesFound = 0;
+
+    for (const Move& move : moves) {
+        if (move.type == MoveType::EN_PASSANT) {
+            ++enPassantMovesFound;
+
+            if (move != expectedMove) {
+                std::cout << move << "\n";
+                return false;
+            }
+
+            std::cout << move << "\n";
+        }
+    }
+
+    if (enPassantMovesFound != 1) {
+        return false;
+    }
+
+    return true;
+}
+
 bool testPseudoLegalPawnMoves() {
     Position position = positionFromFEN("r3kb1r/pbpqp1P1/1pn5/PB1pPp1p/3Pn3/5N1p/1PP2P2/RNBQK2R w KQkq f6 0 28");
 
