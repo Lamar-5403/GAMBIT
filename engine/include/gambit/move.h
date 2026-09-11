@@ -20,6 +20,7 @@ struct Move {
     PieceType piece;
     MoveType type;
     std::optional<PieceType> promotionPiece;
+    bool operator==(const Move&) const = default;
 };
 
 std::ostream& operator<<(std::ostream& os, Move move);

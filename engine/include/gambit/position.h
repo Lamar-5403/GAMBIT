@@ -3,6 +3,7 @@
 #include <optional>
 #include <gambit/board.h>
 #include <string>
+#include <array>
 
 class Position {
     public:
@@ -24,7 +25,7 @@ class Position {
         int getFullMoveNumber() const;
         
     private:
-        Bitboard pieces[2][6];
+        std::array<std::array<Bitboard, 6>, 2> pieces;
         Color sideToMove;
         std::uint8_t castlingRights;
         std::optional<Square> enPassantSquare;

@@ -194,7 +194,24 @@ void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
 }
 
 void generateKnightMoves(const Position& position, std::vector<Move>& moves) {
-    
+    Color color = position.getSideToMove();
+
+    Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
+    Bitboard allOccupancy = position.getAllOccupancy();
+
+    Bitboard knights = position.getPieceBoard(color, PieceType::KNIGHT);
+
+    while (knights != 0) {
+        int squareIndex = std::countr_zero(knights);
+
+        Square source = static_cast<Square>(squareIndex);
+        int rank = squareToRank(source);
+        char file = squareToFile(source);
+
+        
+
+        knights &= knights - 1;
+    }
 }
 
 void generateBishopMoves(const Position& position, std::vector<Move>& moves) {

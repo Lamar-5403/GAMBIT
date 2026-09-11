@@ -16,10 +16,12 @@ add_executable(gambit
     engine/src/board.cpp
     engine/src/position.cpp
     engine/src/move.cpp
+    engine/src/attack.cpp
 
     engine/tests/test_board.cpp
     engine/tests/test_position.cpp
     engine/tests/test_move.cpp
+    engine/tests/test_attacks.cpp
 )
 
 # Project headers
