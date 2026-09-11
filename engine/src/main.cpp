@@ -8,6 +8,7 @@ bool testForwardPawnMove();
 bool testStartingPositionFromFEN();
 bool testPositionFromFEN();
 bool testWhitePawnAttackTable();
+bool testBlackPawnAttackTable();
 bool testPseudoLegalPawnMoves();
 bool testKnightAttackTable();
 bool testPseudoLegalKnightMoves();
@@ -25,6 +26,7 @@ int main() {
     passed &= testStartingPositionFromFEN();
     passed &= testPositionFromFEN();
     passed &= testWhitePawnAttackTable();
+    passed &= testBlackPawnAttackTable();
     passed &= testPseudoLegalPawnMoves();
     passed &= testKnightAttackTable();
     passed &= testPseudoLegalKnightMoves();

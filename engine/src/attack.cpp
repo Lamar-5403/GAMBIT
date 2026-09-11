@@ -13,7 +13,7 @@ namespace attacks {
             char file = squareToFile(static_cast<Square>(i));
             int rank = squareToRank(static_cast<Square>(i));
 
-            if (rank > 1) {
+            if (rank < 8 && rank > 1) {
                 if (file != 'A') {
                     attackSquares |= squareToBitboard(static_cast<Square>(i - 9));
                 }
@@ -24,6 +24,26 @@ namespace attacks {
             }
 
             whitePawnAttackTable[i] = attackSquares;
+        }
+    }
+
+    void initializeBlackPawnAttackTable() {
+        for (int i = 0; i < NUM_SQUARES; i++) {
+            Bitboard attackSquares = 0;
+            char file = squareToFile(static_cast<Square>(i));
+            int rank = squareToRank(static_cast<Square>(i));
+
+            if (rank > 1 && rank < 8) {
+                if (file != 'A') {
+                    attackSquares |= squareToBitboard(static_cast<Square>(i + 7));
+                }
+
+                if (file != 'H') {
+                    attackSquares |= squareToBitboard(static_cast<Square>(i + 9));
+                }
+            }
+
+            blackPawnAttackTable[i] = attackSquares;
         }
     }
 
