@@ -112,3 +112,38 @@ bool testPseudoLegalPawnMoves() {
 
     return true;
 }
+
+bool testPseudoLegalKnightMoves() {
+    Position position = positionFromFEN("n3Qrk1/5ppp/3nN3/1n3b2/8/5N2/5PPP/N4RK1 b - - 14 26");
+
+    std::vector<Move> expectedMoves = {
+        {Square::A8, Square::C7, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::A8, Square::B6, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::D6, Square::E8, Color::BLACK, PieceType::KNIGHT, MoveType::CAPTURE, std::nullopt},
+        {Square::D6, Square::C8, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::D6, Square::B7, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::D6, Square::C4, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::D6, Square::E4, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::B5, Square::A7, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::B5, Square::C7, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::B5, Square::D4, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::B5, Square::C3, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+        {Square::B5, Square::A3, Color::BLACK, PieceType::KNIGHT, MoveType::QUIET, std::nullopt},
+    };
+
+    std::vector<Move> actualMoves;
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    return true;
+}

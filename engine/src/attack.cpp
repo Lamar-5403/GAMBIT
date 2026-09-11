@@ -2,7 +2,7 @@
 
 namespace attacks {
 
-    std::array<Bitboard, NUM_SQUARES> knight = {0};
+    std::array<Bitboard, NUM_SQUARES> knightAttackTable = {0};
 
     const std::array<std::pair<int, int>, 8> knightOffsets = {{
         {-2, -1},
@@ -15,11 +15,11 @@ namespace attacks {
         { 2,  1}
     }};
 
-    void initializeKnightAttacks() {
+    void initializeKnightAttackTable() {
         for (int i = 0; i < NUM_SQUARES; i++) {
             Bitboard attackSquares = 0;
-            int rank = squareToRank(static_cast<Square>(i));
             char file = squareToFile(static_cast<Square>(i));
+            int rank = squareToRank(static_cast<Square>(i));
 
             for (const auto& [rankOffset, fileOffset] : knightOffsets) {
                 int destinationRank = rank + rankOffset;
@@ -32,7 +32,9 @@ namespace attacks {
                 }
             }
 
-            knight[i] = attackSquares;
+            knightAttackTable[i] = attackSquares;
         }
     }
+
+    
 }

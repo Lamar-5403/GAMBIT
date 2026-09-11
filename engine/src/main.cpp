@@ -9,6 +9,7 @@ bool testStartingPositionFromFEN();
 bool testPositionFromFEN();
 bool testPseudoLegalPawnMoves();
 bool testKnightAttackTable();
+bool testPseudoLegalKnightMoves();
 
 int main() {
     bool passed = true;
@@ -24,5 +25,6 @@ int main() {
     passed &= testPositionFromFEN();
     passed &= testPseudoLegalPawnMoves();
     passed &= testKnightAttackTable();
+    passed &= testPseudoLegalKnightMoves();
     return passed ? 0 : 1;
 }

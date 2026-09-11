@@ -1,4 +1,5 @@
 #include <gambit/move.h>
+#include <gambit/attack.h>
 #include <optional>
 #include <bit>
 
@@ -197,18 +198,40 @@ void generateKnightMoves(const Position& position, std::vector<Move>& moves) {
     Color color = position.getSideToMove();
 
     Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
-    Bitboard allOccupancy = position.getAllOccupancy();
+    Bitboard friendlyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::WHITE) : position.getOccupancy(Color::BLACK);
 
     Bitboard knights = position.getPieceBoard(color, PieceType::KNIGHT);
 
     while (knights != 0) {
         int squareIndex = std::countr_zero(knights);
-
         Square source = static_cast<Square>(squareIndex);
-        int rank = squareToRank(source);
-        char file = squareToFile(source);
+        Bitboard attackSquares = attacks::knightAttackTable[squareIndex];
+        attackSquares &= ~friendlyOccupancy;
 
-        
+        while (attackSquares != 0) {
+            int destinationSquare = std::countr_zero(attackSquares);
+
+            MoveType moveType;
+
+            if (squareToBitboard(static_cast<Square>(destinationSquare)) & enemyOccupancy) {
+                moveType = MoveType::CAPTURE;
+            } else {
+                moveType = MoveType::QUIET;
+            }
+
+            Move move {
+                    source,
+                    static_cast<Square>(destinationSquare),
+                    color,
+                    PieceType::KNIGHT,
+                    moveType,
+                    std::nullopt
+            };
+
+            moves.push_back(move);
+
+            attackSquares &= attackSquares - 1;
+        }
 
         knights &= knights - 1;
     }
