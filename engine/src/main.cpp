@@ -15,6 +15,7 @@ bool testKingAttackTable();
 bool testPseudoLegalKnightMoves();
 bool testEnPassant();
 bool testStandardKingMoves();
+bool testSlidingRayTable();
 
 int main() {
     bool passed = true;
@@ -36,5 +37,6 @@ int main() {
     passed &= testPseudoLegalKnightMoves();
     passed &= testEnPassant();
     passed &= testStandardKingMoves();
+    passed &= testSlidingRayTable();
     return passed ? 0 : 1;
 }

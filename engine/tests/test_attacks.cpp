@@ -136,3 +136,86 @@ bool testKingAttackTable() {
     std::cout << "PASS: King attack table.\n";
     return true;
 }
+
+bool testSlidingRayTable() {
+    attacks::initializeSlidingRayTable();
+
+    Bitboard expectedNorth = 0;
+    Bitboard expectedSouth = 0;
+    Bitboard expectedEast = 0;
+    Bitboard expectedWest = 0;
+    Bitboard expectedNorthEast = 0;
+    Bitboard expectedNorthWest = 0;
+    Bitboard expectedSouthEast = 0;
+    Bitboard expectedSouthWest = 0;
+
+    attacks::SlidingRays expectedE4rays = {
+        expectedNorth | squareToBitboard(Square::E5)
+        | squareToBitboard(Square::E6)
+        | squareToBitboard(Square::E7)
+        | squareToBitboard(Square::E8),
+        expectedSouth | squareToBitboard(Square::E3)
+        | squareToBitboard(Square::E2)
+        | squareToBitboard(Square::E1),
+        expectedEast | squareToBitboard(Square::F4)
+        | squareToBitboard(Square::G4)
+        | squareToBitboard(Square::H4),
+        expectedWest | squareToBitboard(Square::D4)
+        | squareToBitboard(Square::C4)
+        | squareToBitboard(Square::B4)
+        | squareToBitboard(Square::A4),
+        expectedNorthEast | squareToBitboard(Square::F5)
+        | squareToBitboard(Square::G6)
+        | squareToBitboard(Square::H7),
+        expectedNorthWest | squareToBitboard(Square::D5)
+        | squareToBitboard(Square::C6)
+        | squareToBitboard(Square::B7)
+        | squareToBitboard(Square::A8),
+        expectedSouthEast | squareToBitboard(Square::F3)
+        | squareToBitboard(Square::G2)
+        | squareToBitboard(Square::H1), 
+        expectedSouthWest | squareToBitboard(Square::D3)
+        | squareToBitboard(Square::C2)
+        | squareToBitboard(Square::B1)
+    };
+
+    attacks::SlidingRays expectedA8rays = {
+        expectedNorth,
+        expectedSouth | squareToBitboard(Square::A7)
+        | squareToBitboard(Square::A6)
+        | squareToBitboard(Square::A5)
+        | squareToBitboard(Square::A4)
+        | squareToBitboard(Square::A3)
+        | squareToBitboard(Square::A2)
+        | squareToBitboard(Square::A1),
+        expectedEast | squareToBitboard(Square::B8)
+        | squareToBitboard(Square::C8)
+        | squareToBitboard(Square::D8)
+        | squareToBitboard(Square::E8)
+        | squareToBitboard(Square::F8)
+        | squareToBitboard(Square::G8)
+        | squareToBitboard(Square::H8),
+        expectedWest,
+        expectedNorthEast,
+        expectedNorthWest,
+        expectedSouthEast | squareToBitboard(Square::B7)
+        | squareToBitboard(Square::C6)
+        | squareToBitboard(Square::D5)
+        | squareToBitboard(Square::E4)
+        | squareToBitboard(Square::F3)
+        | squareToBitboard(Square::G2)
+        | squareToBitboard(Square::H1), 
+        expectedSouthWest
+    };
+
+    if (attacks::slidingRayTable[36] != expectedE4rays) {
+        return false;
+    }
+
+    if (attacks::slidingRayTable[0] != expectedA8rays) {
+        return false;
+    }
+
+    std::cout << "PASS: Sliding ray table initialization.\n";
+    return true;
+}

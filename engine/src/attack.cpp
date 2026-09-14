@@ -6,6 +6,7 @@ namespace attacks {
     std::array<Bitboard, NUM_SQUARES> blackPawnAttackTable = {0};
     std::array<Bitboard, NUM_SQUARES> knightAttackTable = {0};
     std::array<Bitboard, NUM_SQUARES> kingAttackTable = {0};
+    std::array<SlidingRays, NUM_SQUARES> slidingRayTable = {0};
 
     void initializeWhitePawnAttackTable() {
         for (int i = 0; i < NUM_SQUARES; i++) {
@@ -112,4 +113,72 @@ namespace attacks {
         }
     }
 
+    const std::array<std::pair<int, int>, 8> rayDirections = {{
+        { 1,   0}, // N
+        {-1,   0}, // S
+        { 0,   1}, // E
+        { 0,  -1}, // W
+        { 1,   1}, // NE
+        { 1,  -1}, // NW
+        {-1,   1}, // SE
+        {-1,  -1}  // SW
+    }};
+
+    void initializeSlidingRayTable() {
+        for (int i = 0; i < NUM_SQUARES; i++) {
+            SlidingRays rays = {};
+            Square source = static_cast<Square>(i);
+            int rank = squareToRank(source);
+            char file = squareToFile(source);
+
+            for (std::size_t direction = 0; direction < rayDirections.size(); direction++) {
+                const auto& [rankOffset, fileOffset] = rayDirections[direction];
+                Bitboard raySquares = 0;
+                int targetRank = rank + rankOffset;
+                char targetFile = file + fileOffset;
+
+                while (targetRank >= 1 && targetRank <= 8 && targetFile >= 'A' && targetFile <= 'H') {
+                    raySquares |= squareToBitboard(fileRankToSquare(targetFile, targetRank));
+                    targetRank += rankOffset;
+                    targetFile += fileOffset;
+                }
+
+                switch (direction) {
+                    case 0:
+                        rays.north = raySquares;
+                    break;
+
+                    case 1:
+                        rays.south = raySquares;
+                    break;
+
+                    case 2:
+                        rays.east = raySquares;
+                    break;
+
+                    case 3:
+                        rays.west = raySquares;
+                    break;
+
+                    case 4:
+                        rays.northEast = raySquares;
+                    break;
+
+                    case 5:
+                        rays.northWest = raySquares;
+                    break;
+
+                    case 6:
+                        rays.southEast = raySquares;
+                    break;
+
+                    case 7:
+                        rays.southWest = raySquares;
+                    break;
+                }
+            }
+
+            slidingRayTable[i] = rays;
+        }
+    }
 }

@@ -231,6 +231,14 @@ void generateKingMoves(const Position& position, std::vector<Move>& moves) {
 
         attackSquares &= attackSquares - 1;
     }
+
+    // - appropriate castling-rights bit exists
+    // - king is on its starting square
+    // - rook is on its starting square
+    // - squares between them are empty
+    // - king is not currently in check
+    // - king does not pass through an attacked square
+    // - king does not end on an attacked square
 }
 
 void generateBishopMoves(const Position& position, std::vector<Move>& moves) {
