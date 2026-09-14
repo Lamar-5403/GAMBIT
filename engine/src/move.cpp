@@ -242,7 +242,12 @@ void generateKingMoves(const Position& position, std::vector<Move>& moves) {
 }
 
 void generateBishopMoves(const Position& position, std::vector<Move>& moves) {
+    Color color = position.getSideToMove();
+    Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
+    Bitboard allOccupancy = position.getAllOccupancy();
+
     
+
 }
 
 void generateRookMoves(const Position& position, std::vector<Move>& moves) {

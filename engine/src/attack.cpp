@@ -196,4 +196,44 @@ namespace attacks {
 
         return static_cast<Square>(std::countr_zero(blockers));
     }
+
+    Bitboard truncateRay(Bitboard ray, Square firstBlocker, attacks::RayDirection direction) {
+        Bitboard rayFromBlocker = 0;
+        
+        switch (direction) {
+            case attacks::RayDirection::NORTH:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].north;
+            break;
+            
+            case attacks::RayDirection::SOUTH:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].south;
+            break;
+            
+            case attacks::RayDirection::EAST:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].east;
+            break;
+            
+            case attacks::RayDirection::WEST:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].west;
+            break;
+            
+            case attacks::RayDirection::NORTH_EAST:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].northEast;
+            break;
+            
+            case attacks::RayDirection::NORTH_WEST:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].northWest;
+            break;
+            
+            case attacks::RayDirection::SOUTH_EAST:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].southEast;
+            break;
+            
+            case attacks::RayDirection::SOUTH_WEST:
+            rayFromBlocker = attacks::slidingRayTable[static_cast<int>(firstBlocker)].southWest;
+            break;
+        }
+        
+        return ray & ~rayFromBlocker;
+    }
 }

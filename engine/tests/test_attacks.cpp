@@ -275,3 +275,25 @@ bool testGetFirstBlocker() {
     std::cout << "PASS: Get first blocker.\n";
     return true;
 }
+
+bool testTruncateRay() {
+    Bitboard northRay = attacks::slidingRayTable[static_cast<int>(Square::E4)].north;
+    Bitboard southRay = attacks::slidingRayTable[static_cast<int>(Square::E4)].south;
+
+    Square northBlocker = Square::E7;
+    Square southBlocker = Square::E2;
+
+    Bitboard expectedNorthRay = squareToBitboard(Square::E5) | squareToBitboard(Square::E6) | squareToBitboard(Square::E7);
+    Bitboard expectedSouthRay = squareToBitboard(Square::E3) | squareToBitboard(Square::E2);
+
+    if (attacks::truncateRay(northRay, northBlocker, attacks::RayDirection::NORTH) != expectedNorthRay) {
+        return false;
+    }
+
+    if (attacks::truncateRay(southRay, southBlocker, attacks::RayDirection::SOUTH) != expectedSouthRay) {
+        return false;
+    }
+
+    std::cout << "PASS: Ray truncation.\n";
+    return true;
+}

@@ -43,4 +43,5 @@ namespace attacks {
     void initializeSlidingRayTable();
 
     std::optional<Square> getFirstBlocker(Bitboard ray, Bitboard occupancy, RayDirection direction);
+    Bitboard truncateRay(Bitboard ray, Square firstBlocker, attacks::RayDirection direction);
 }
