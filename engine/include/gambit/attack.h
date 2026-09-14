@@ -1,8 +1,21 @@
 #pragma once
 #include <gambit/board.h>
 #include <array>
+#include <optional>
+#include <bit>
 
 namespace attacks {
+
+    enum class RayDirection {
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST,
+        NORTH_EAST,
+        NORTH_WEST,
+        SOUTH_EAST,
+        SOUTH_WEST
+    };
 
     struct SlidingRays {
         Bitboard north;
@@ -28,4 +41,6 @@ namespace attacks {
     void initializeKnightAttackTable();
     void initializeKingAttackTable();
     void initializeSlidingRayTable();
+
+    std::optional<Square> getFirstBlocker(Bitboard ray, Bitboard occupancy, RayDirection direction);
 }

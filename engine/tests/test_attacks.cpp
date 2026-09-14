@@ -1,5 +1,7 @@
 #include <gambit/attack.h>
+#include <gambit/position.h>
 #include <iostream>
+#include <vector>
 
 bool testWhitePawnAttackTable() {
     attacks::initializeWhitePawnAttackTable();
@@ -217,5 +219,59 @@ bool testSlidingRayTable() {
     }
 
     std::cout << "PASS: Sliding ray table initialization.\n";
+    return true;
+}
+
+bool testGetFirstBlocker() {
+    Position position = positionFromFEN("r7/4r3/8/5r2/3rQ3/8/6r1/1r6 w - - 0 1");
+    Bitboard occupancy = position.getAllOccupancy();
+    Bitboard ray = 0;
+    Square source = Square::E4;
+    const attacks::SlidingRays& rays = attacks::slidingRayTable[static_cast<int>(source)];
+    std::vector<std::optional<Square>> expectedBlockers = {Square::E7, std::nullopt, std::nullopt, Square::D4, Square::F5, Square::A8, Square::G2, Square::B1};
+
+    for (int i = 0; i < 8; i++) {
+        switch (static_cast<attacks::RayDirection>(i)) {
+            case attacks::RayDirection::NORTH:
+                ray = rays.north;
+            break;
+
+            case attacks::RayDirection::SOUTH:
+                ray = rays.south;
+            break;
+
+            case attacks::RayDirection::EAST:
+                ray = rays.east;
+            break;
+
+            case attacks::RayDirection::WEST:
+                ray = rays.west;
+            break;
+
+            case attacks::RayDirection::NORTH_EAST:
+                ray = rays.northEast;
+            break;
+
+            case attacks::RayDirection::NORTH_WEST:
+                ray = rays.northWest;
+            break;
+
+            case attacks::RayDirection::SOUTH_EAST:
+                ray = rays.southEast;
+            break;
+
+            case attacks::RayDirection::SOUTH_WEST:
+                ray = rays.southWest;
+            break;
+        }
+
+        std::optional<Square> firstBlocker = attacks::getFirstBlocker(ray, occupancy, static_cast<attacks::RayDirection>(i));
+
+        if (expectedBlockers[i] != firstBlocker) {
+            return false;
+        }
+    }
+
+    std::cout << "PASS: Get first blocker.\n";
     return true;
 }

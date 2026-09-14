@@ -181,4 +181,19 @@ namespace attacks {
             slidingRayTable[i] = rays;
         }
     }
+
+    std::optional<Square> getFirstBlocker(Bitboard ray, Bitboard occupancy, RayDirection direction) {
+        Bitboard blockers = ray & occupancy;
+
+        if (blockers == 0) {
+            return std::nullopt;
+        }
+
+        if (direction == RayDirection::NORTH || direction == RayDirection::WEST
+            || direction == RayDirection::NORTH_EAST || direction == RayDirection::NORTH_WEST) {
+                return static_cast<Square>(63 - std::countl_zero(blockers));
+        }
+
+        return static_cast<Square>(std::countr_zero(blockers));
+    }
 }
