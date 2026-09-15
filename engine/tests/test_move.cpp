@@ -421,3 +421,47 @@ bool testGenerateRookMoves() {
     std::cout << "PASS: Generate rook moves.\n";
     return true;
 }
+
+bool testGenerateQueenMoves() {
+    Position position = positionFromFEN("N3r1k1/7n/8/8/p3Qb2/8/2p3K1/8 w - - 0 1");
+    std::vector<Move> actualMoves = {};
+
+    generateQueenMoves(position, actualMoves);
+
+    std::vector<Move> expectedMoves = {
+        {Square::E4, Square::E5, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E6, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E7, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E8, Color::WHITE, PieceType::QUEEN, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::F5, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::G6, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::H7, Color::WHITE, PieceType::QUEEN, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::F4, Color::WHITE, PieceType::QUEEN, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::F3, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E3, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E2, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E1, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::D3, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::C2, Color::WHITE, PieceType::QUEEN, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::D4, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::C4, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::B4, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::A4, Color::WHITE, PieceType::QUEEN, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::D5, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::C6, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::B7, Color::WHITE, PieceType::QUEEN, MoveType::QUIET, std::nullopt},
+    };
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    std::cout << "PASS: Generate queen moves.\n";
+    return true;
+}

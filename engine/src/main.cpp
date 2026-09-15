@@ -20,6 +20,7 @@ bool testGetFirstBlocker();
 bool testTruncateRay();
 bool testGenerateBishopMoves();
 bool testGenerateRookMoves();
+bool testGenerateQueenMoves();
 
 int main() {
     bool passed = true;
@@ -46,5 +47,6 @@ int main() {
     passed &= testTruncateRay();
     passed &= testGenerateBishopMoves();
     passed &= testGenerateRookMoves();
+    passed &= testGenerateQueenMoves();
     return passed ? 0 : 1;
 }

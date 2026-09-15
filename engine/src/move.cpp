@@ -22,6 +22,32 @@ void unmakeMove(Position& position, const Move& move) {
     pieceBoard = setSquare(pieceBoard, move.source);
 }
 
+void generateSlidingMoves(Bitboard ray, attacks::RayDirection direction, Square source, PieceType piece, Color color, Bitboard enemyOccupancy, Bitboard friendlyOccupancy, Bitboard allOccupancy, std::vector<Move>& moves) {
+    std::optional<Square> firstBlocker = attacks::getFirstBlocker(ray, allOccupancy, direction);
+    if (firstBlocker) {
+            ray = attacks::truncateRay(ray, *firstBlocker, direction);
+        }
+    ray &= ~friendlyOccupancy;
+    
+    while (ray != 0) {
+        int destination = std::countr_zero(ray);
+        MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
+
+        Move move = {
+            source,
+            static_cast<Square>(destination),
+            color,
+            piece,
+            moveType,
+            std::nullopt
+        };
+
+        moves.push_back(move);
+
+        ray &= ray - 1;
+    }
+}
+
 void generatePawnMoves(const Position& position, std::vector<Move>& moves) {
     Color color = position.getSideToMove();
 
@@ -253,108 +279,16 @@ void generateBishopMoves(const Position& position, std::vector<Move>& moves) {
         Square source = static_cast<Square>(squareIndex);
 
         Bitboard northEastRay = attacks::slidingRayTable[squareIndex].northEast;
-        std::optional<Square> firstBlocker = attacks::getFirstBlocker(northEastRay, allOccupancy, attacks::RayDirection::NORTH_EAST);
-        if (firstBlocker) {
-            northEastRay = attacks::truncateRay(northEastRay, *firstBlocker, attacks::RayDirection::NORTH_EAST);
-        }
-        northEastRay &= ~friendlyOccupancy;
-
-        while (northEastRay != 0) {
-            int destination = std::countr_zero(northEastRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::BISHOP,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            northEastRay &= northEastRay - 1;
-        }
+        generateSlidingMoves(northEastRay, attacks::RayDirection::NORTH_EAST, source, PieceType::BISHOP, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
         
         Bitboard northWestRay = attacks::slidingRayTable[squareIndex].northWest;
-        firstBlocker = attacks::getFirstBlocker(northWestRay, allOccupancy, attacks::RayDirection::NORTH_WEST);
-        if (firstBlocker) {
-            northWestRay = attacks::truncateRay(northWestRay, *firstBlocker, attacks::RayDirection::NORTH_WEST);
-        }
-        northWestRay &= ~friendlyOccupancy;
-
-        while (northWestRay != 0) {
-            int destination = std::countr_zero(northWestRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::BISHOP,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            northWestRay &= northWestRay - 1;
-        }
+        generateSlidingMoves(northWestRay, attacks::RayDirection::NORTH_WEST, source, PieceType::BISHOP, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         Bitboard southEastRay = attacks::slidingRayTable[squareIndex].southEast;
-        firstBlocker = attacks::getFirstBlocker(southEastRay, allOccupancy, attacks::RayDirection::SOUTH_EAST);
-        if (firstBlocker) {
-            southEastRay = attacks::truncateRay(southEastRay, *firstBlocker, attacks::RayDirection::SOUTH_EAST);
-        }
-        southEastRay &= ~friendlyOccupancy;
-
-        while (southEastRay != 0) {
-            int destination = std::countr_zero(southEastRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::BISHOP,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            southEastRay &= southEastRay - 1;
-        }
+        generateSlidingMoves(southEastRay, attacks::RayDirection::SOUTH_EAST, source, PieceType::BISHOP, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         Bitboard southWestRay = attacks::slidingRayTable[squareIndex].southWest;
-        firstBlocker = attacks::getFirstBlocker(southWestRay, allOccupancy, attacks::RayDirection::SOUTH_WEST);
-        if (firstBlocker) {
-            southWestRay = attacks::truncateRay(southWestRay, *firstBlocker, attacks::RayDirection::SOUTH_WEST);
-        }
-        southWestRay &= ~friendlyOccupancy;
-
-        while (southWestRay != 0) {
-            int destination = std::countr_zero(southWestRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::BISHOP,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            southWestRay &= southWestRay - 1;
-        }
+        generateSlidingMoves(southWestRay, attacks::RayDirection::SOUTH_WEST, source, PieceType::BISHOP, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         bishops &= bishops - 1;
     }
@@ -372,115 +306,58 @@ void generateRookMoves(const Position& position, std::vector<Move>& moves) {
         Square source = static_cast<Square>(squareIndex);
 
         Bitboard northRay = attacks::slidingRayTable[squareIndex].north;
-        std::optional<Square> firstBlocker = attacks::getFirstBlocker(northRay, allOccupancy, attacks::RayDirection::NORTH);
-        if (firstBlocker) {
-            northRay = attacks::truncateRay(northRay, *firstBlocker, attacks::RayDirection::NORTH);
-        }
-        northRay &= ~friendlyOccupancy;
-
-        while (northRay != 0) {
-            int destination = std::countr_zero(northRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::ROOK,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            northRay &= northRay - 1;
-        }
+        generateSlidingMoves(northRay, attacks::RayDirection::NORTH, source, PieceType::ROOK, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         Bitboard southRay = attacks::slidingRayTable[squareIndex].south;
-        firstBlocker = attacks::getFirstBlocker(southRay, allOccupancy, attacks::RayDirection::SOUTH);
-        if (firstBlocker) {
-            southRay = attacks::truncateRay(southRay, *firstBlocker, attacks::RayDirection::SOUTH);
-        }
-        southRay &= ~friendlyOccupancy;
-
-        while (southRay != 0) {
-            int destination = std::countr_zero(southRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::ROOK,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            southRay &= southRay - 1;
-        }
+        generateSlidingMoves(southRay, attacks::RayDirection::SOUTH, source, PieceType::ROOK, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         Bitboard eastRay = attacks::slidingRayTable[squareIndex].east;
-        firstBlocker = attacks::getFirstBlocker(eastRay, allOccupancy, attacks::RayDirection::EAST);
-        if (firstBlocker) {
-            eastRay = attacks::truncateRay(eastRay, *firstBlocker, attacks::RayDirection::EAST);
-        }
-        eastRay &= ~friendlyOccupancy;
-
-        while (eastRay != 0) {
-            int destination = std::countr_zero(eastRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::ROOK,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            eastRay &= eastRay - 1;
-        }
+        generateSlidingMoves(eastRay, attacks::RayDirection::EAST, source, PieceType::ROOK, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         Bitboard westRay = attacks::slidingRayTable[squareIndex].west;
-        firstBlocker = attacks::getFirstBlocker(westRay, allOccupancy, attacks::RayDirection::WEST);
-        if (firstBlocker) {
-            westRay = attacks::truncateRay(westRay, *firstBlocker, attacks::RayDirection::WEST);
-        }
-        westRay &= ~friendlyOccupancy;
-
-        while (westRay != 0) {
-            int destination = std::countr_zero(westRay);
-
-            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
-
-            Move move = {
-                source,
-                static_cast<Square>(destination),
-                color,
-                PieceType::ROOK,
-                moveType,
-                std::nullopt
-            };
-
-            moves.push_back(move);
-
-            westRay &= westRay - 1;
-        }
+        generateSlidingMoves(westRay, attacks::RayDirection::WEST, source, PieceType::ROOK, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
 
         rooks &= rooks - 1;
     }
 }
 
 void generateQueenMoves(const Position& position, std::vector<Move>& moves) {
-    
+    Color color = position.getSideToMove();
+    Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
+    Bitboard friendlyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::WHITE) : position.getOccupancy(Color::BLACK);
+    Bitboard allOccupancy = position.getAllOccupancy();
+    Bitboard queens = position.getPieceBoard(color, PieceType::QUEEN);
+
+    while (queens != 0) {
+        int squareIndex = std::countr_zero(queens);
+        Square source = static_cast<Square>(squareIndex);
+
+        Bitboard northRay = attacks::slidingRayTable[squareIndex].north;
+        generateSlidingMoves(northRay, attacks::RayDirection::NORTH, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        Bitboard southRay = attacks::slidingRayTable[squareIndex].south;
+        generateSlidingMoves(southRay, attacks::RayDirection::SOUTH, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        Bitboard eastRay = attacks::slidingRayTable[squareIndex].east;
+        generateSlidingMoves(eastRay, attacks::RayDirection::EAST, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        Bitboard westRay = attacks::slidingRayTable[squareIndex].west;
+        generateSlidingMoves(westRay, attacks::RayDirection::WEST, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        Bitboard northEastRay = attacks::slidingRayTable[squareIndex].northEast;
+        generateSlidingMoves(northEastRay, attacks::RayDirection::NORTH_EAST, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+        
+        Bitboard northWestRay = attacks::slidingRayTable[squareIndex].northWest;
+        generateSlidingMoves(northWestRay, attacks::RayDirection::NORTH_WEST, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        Bitboard southEastRay = attacks::slidingRayTable[squareIndex].southEast;
+        generateSlidingMoves(southEastRay, attacks::RayDirection::SOUTH_EAST, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        Bitboard southWestRay = attacks::slidingRayTable[squareIndex].southWest;
+        generateSlidingMoves(southWestRay, attacks::RayDirection::SOUTH_WEST, source, PieceType::QUEEN, color, enemyOccupancy, friendlyOccupancy, allOccupancy, moves);
+
+        queens &= queens - 1;
+    }
 }
 
 std::vector<Move> generatePseudoLegalMoves(const Position& position) {

@@ -1,5 +1,6 @@
 #pragma once
 #include <gambit/position.h>
+#include <gambit/attack.h>
 #include <optional>
 #include <vector>
 
@@ -28,6 +29,7 @@ std::ostream& operator<<(std::ostream& os, Move move);
 void makeMove(Position& position, const Move& move);
 void unmakeMove(Position& position, const Move& move);
 
+void generateSlidingMoves(Bitboard ray, attacks::RayDirection direction, Square source, PieceType piece, Color color, Bitboard enemyOccupancy, Bitboard friendlyOccupancy, Bitboard allOccupancy, std::vector<Move>& moves);
 void generatePawnMoves(const Position& position, std::vector<Move>& moves);
 void generateKnightMoves(const Position& position, std::vector<Move>& moves);
 void generateKingMoves(const Position& position, std::vector<Move>& moves);
