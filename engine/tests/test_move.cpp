@@ -373,7 +373,7 @@ bool testGenerateBishopMoves() {
         {Square::E4, Square::D5, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
         {Square::E4, Square::C6, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
         {Square::E4, Square::B7, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
-        {Square::E4, Square::A8, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::A8, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt}
     };
 
     if (expectedMoves.size() != actualMoves.size()) {
@@ -387,5 +387,37 @@ bool testGenerateBishopMoves() {
     }
 
     std::cout << "PASS: Generate bishop moves.\n";
+    return true;
+}
+
+bool testGenerateRookMoves() {
+    Position position = positionFromFEN("8/4r1k1/8/8/4Rn2/3b4/4Q3/7K w - - 0 1");
+    std::vector<Move> actualMoves = {};
+
+    generateRookMoves(position, actualMoves);
+
+    std::vector<Move> expectedMoves = {
+        {Square::E4, Square::E5, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E6, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::E7, Color::WHITE, PieceType::ROOK, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::E3, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::F4, Color::WHITE, PieceType::ROOK, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::D4, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::C4, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::B4, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::A4, Color::WHITE, PieceType::ROOK, MoveType::QUIET, std::nullopt},
+    };
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    std::cout << "PASS: Generate rook moves.\n";
     return true;
 }
