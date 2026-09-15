@@ -356,3 +356,36 @@ bool testStandardKingMoves() {
     std::cout << "PASS: Standard King moves.\n";
     return true;
 }
+
+bool testGenerateBishopMoves() {
+    Position position = positionFromFEN("7R/5k1q/3Q4/4b3/4B3/5rR1/2n5/7K w - - 0 1");
+    std::vector<Move> actualMoves = {};
+
+    generateBishopMoves(position, actualMoves);
+
+    std::vector<Move> expectedMoves = {
+        {Square::E4, Square::F5, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::G6, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::H7, Color::WHITE, PieceType::BISHOP, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::F3, Color::WHITE, PieceType::BISHOP, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::D3, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::C2, Color::WHITE, PieceType::BISHOP, MoveType::CAPTURE, std::nullopt},
+        {Square::E4, Square::D5, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::C6, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::B7, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+        {Square::E4, Square::A8, Color::WHITE, PieceType::BISHOP, MoveType::QUIET, std::nullopt},
+    };
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        return false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            return false;
+        }
+    }
+
+    std::cout << "PASS: Generate bishop moves.\n";
+    return true;
+}

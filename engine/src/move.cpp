@@ -244,10 +244,120 @@ void generateKingMoves(const Position& position, std::vector<Move>& moves) {
 void generateBishopMoves(const Position& position, std::vector<Move>& moves) {
     Color color = position.getSideToMove();
     Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
+    Bitboard friendlyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::WHITE) : position.getOccupancy(Color::BLACK);
     Bitboard allOccupancy = position.getAllOccupancy();
+    Bitboard bishops = position.getPieceBoard(color, PieceType::BISHOP);
 
-    
+    while (bishops != 0) {
+        int squareIndex =  std::countr_zero(bishops);
+        Square source = static_cast<Square>(squareIndex);
 
+        Bitboard northEastRay = attacks::slidingRayTable[squareIndex].northEast;
+        std::optional<Square> firstBlocker = attacks::getFirstBlocker(northEastRay, allOccupancy, attacks::RayDirection::NORTH_EAST);
+        if (firstBlocker) {
+            northEastRay = attacks::truncateRay(northEastRay, *firstBlocker, attacks::RayDirection::NORTH_EAST);
+        }
+        northEastRay &= ~friendlyOccupancy;
+
+        while (northEastRay != 0) {
+            int destination = std::countr_zero(northEastRay);
+
+            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
+
+            Move move = {
+                source,
+                static_cast<Square>(destination),
+                color,
+                PieceType::BISHOP,
+                moveType,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+
+            northEastRay &= northEastRay - 1;
+        }
+        
+        Bitboard northWestRay = attacks::slidingRayTable[squareIndex].northWest;
+        firstBlocker = attacks::getFirstBlocker(northWestRay, allOccupancy, attacks::RayDirection::NORTH_WEST);
+        if (firstBlocker) {
+            northWestRay = attacks::truncateRay(northWestRay, *firstBlocker, attacks::RayDirection::NORTH_WEST);
+        }
+        northWestRay &= ~friendlyOccupancy;
+
+        while (northWestRay != 0) {
+            int destination = std::countr_zero(northWestRay);
+
+            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
+
+            Move move = {
+                source,
+                static_cast<Square>(destination),
+                color,
+                PieceType::BISHOP,
+                moveType,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+
+            northWestRay &= northWestRay - 1;
+        }
+
+        Bitboard southEastRay = attacks::slidingRayTable[squareIndex].southEast;
+        firstBlocker = attacks::getFirstBlocker(southEastRay, allOccupancy, attacks::RayDirection::SOUTH_EAST);
+        if (firstBlocker) {
+            southEastRay = attacks::truncateRay(southEastRay, *firstBlocker, attacks::RayDirection::SOUTH_EAST);
+        }
+        southEastRay &= ~friendlyOccupancy;
+
+        while (southEastRay != 0) {
+            int destination = std::countr_zero(southEastRay);
+
+            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
+
+            Move move = {
+                source,
+                static_cast<Square>(destination),
+                color,
+                PieceType::BISHOP,
+                moveType,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+
+            southEastRay &= southEastRay - 1;
+        }
+
+        Bitboard southWestRay = attacks::slidingRayTable[squareIndex].southWest;
+        firstBlocker = attacks::getFirstBlocker(southWestRay, allOccupancy, attacks::RayDirection::SOUTH_WEST);
+        if (firstBlocker) {
+            southWestRay = attacks::truncateRay(southWestRay, *firstBlocker, attacks::RayDirection::SOUTH_WEST);
+        }
+        southWestRay &= ~friendlyOccupancy;
+
+        while (southWestRay != 0) {
+            int destination = std::countr_zero(southWestRay);
+
+            MoveType moveType = isSquareOccupied(enemyOccupancy, static_cast<Square>(destination)) ? MoveType::CAPTURE : MoveType::QUIET;
+
+            Move move = {
+                source,
+                static_cast<Square>(destination),
+                color,
+                PieceType::BISHOP,
+                moveType,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+
+            southWestRay &= southWestRay - 1;
+        }
+
+        bishops &= bishops - 1;
+    }
 }
 
 void generateRookMoves(const Position& position, std::vector<Move>& moves) {

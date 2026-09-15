@@ -18,6 +18,7 @@ bool testStandardKingMoves();
 bool testSlidingRayTable();
 bool testGetFirstBlocker();
 bool testTruncateRay();
+bool testGenerateBishopMoves();
 
 int main() {
     bool passed = true;
@@ -42,5 +43,6 @@ int main() {
     passed &= testSlidingRayTable();
     passed &= testGetFirstBlocker();
     passed &= testTruncateRay();
+    passed &= testGenerateBishopMoves();
     return passed ? 0 : 1;
 }
