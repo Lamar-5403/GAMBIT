@@ -326,4 +326,11 @@ namespace attacks {
 
         return false;
     }
+
+    bool isInCheck(const Position& position, Color color) {
+        Square kingSquare = static_cast<Square>(std::countr_zero(position.getPieceBoard(color, PieceType::KING)));
+        Color attackingColor = (color == Color::WHITE) ? Color::BLACK : Color::WHITE;
+
+        return isSquareAttacked(position, kingSquare, attackingColor);
+    }
 }

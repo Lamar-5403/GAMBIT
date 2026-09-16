@@ -47,4 +47,5 @@ namespace attacks {
     Bitboard truncateRay(Bitboard ray, Square firstBlocker, attacks::RayDirection direction);
 
     bool isSquareAttacked(const Position& position, Square square, Color attackingColor);
+    bool isInCheck(const Position& position, Color kingColor);
 }

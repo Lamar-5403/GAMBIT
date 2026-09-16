@@ -22,6 +22,7 @@ bool testGenerateBishopMoves();
 bool testGenerateRookMoves();
 bool testGenerateQueenMoves();
 bool testIsSquareAttacked();
+bool testIsInCheck();
 
 int main() {
     bool passed = true;
@@ -50,5 +51,6 @@ int main() {
     passed &= testGenerateRookMoves();
     passed &= testGenerateQueenMoves();
     passed &= testIsSquareAttacked();
+    passed &= testIsInCheck();
     return passed ? 0 : 1;
 }

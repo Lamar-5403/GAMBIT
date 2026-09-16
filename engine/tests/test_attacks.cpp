@@ -355,3 +355,40 @@ bool testIsSquareAttacked() {
 
     return false;
 }
+
+bool testIsInCheck() {
+    Position position = positionFromFEN("8/6k1/8/6Q1/8/8/1K6/8 b - - 0 1"); // Black in check
+    bool passed = attacks::isInCheck(position, Color::BLACK);
+
+    if (!passed) {
+        std::cout << "FAIL: Black in check.\n";
+    }
+    
+    position = positionFromFEN("8/6k1/8/3Q4/8/8/1K6/8 b - - 0 1"); // Black not in check
+    passed &= !attacks::isInCheck(position, Color::BLACK);
+
+    if (!passed) {
+        std::cout << "FAIL: Black not in check.\n";
+    }
+    
+    position = positionFromFEN("8/6k1/7p/8/2n5/8/1K6/8 w - - 0 1"); // White in check
+    passed &= attacks::isInCheck(position, Color::WHITE);
+
+    if (!passed) {
+        std::cout << "FAIL: White in check.\n";
+    }
+
+    position = positionFromFEN("8/6k1/1r5p/8/8/1n6/1KP5/8 w - - 0 1"); // White not in check
+    passed &= !attacks::isInCheck(position, Color::WHITE);
+
+    if (!passed) {
+        std::cout << "FAIL: White not in check.\n";
+    }
+
+    if (passed) {
+        std::cout << "PASS: isInCheck() logic.\n";
+        return true;
+    }
+
+    return false;
+}
