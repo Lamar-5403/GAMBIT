@@ -222,9 +222,11 @@ void generateKnightMoves(const Position& position, std::vector<Move>& moves) {
 
 void generateKingMoves(const Position& position, std::vector<Move>& moves) {
     Color color = position.getSideToMove();
+    Color attackingColor = (color == Color::WHITE) ? Color::BLACK : Color::WHITE;
 
     Bitboard enemyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::BLACK) : position.getOccupancy(Color::WHITE);
     Bitboard friendlyOccupancy = (color == Color::WHITE) ? position.getOccupancy(Color::WHITE) : position.getOccupancy(Color::BLACK);
+    Bitboard allOccupancy = position.getAllOccupancy();
 
     Bitboard kingBoard = position.getPieceBoard(color, PieceType::KING);
     int squareIndex = std::countr_zero(kingBoard);
@@ -258,13 +260,77 @@ void generateKingMoves(const Position& position, std::vector<Move>& moves) {
         attackSquares &= attackSquares - 1;
     }
 
-    // - appropriate castling-rights bit exists
     // - king is on its starting square
+    // - king is not currently in check
+    // - appropriate castling-rights bit exists
     // - rook is on its starting square
     // - squares between them are empty
-    // - king is not currently in check
     // - king does not pass through an attacked square
     // - king does not end on an attacked square
+
+    uint8_t castlingRights = position.getCastlingRights();
+
+    if ((color == Color::WHITE) && (kingBoard & squareToBitboard(Square::E1)) && (!attacks::isInCheck(position, color))) {
+        if ((castlingRights & 0b00001000) && (position.getPieceBoard(color, PieceType::ROOK) & squareToBitboard(Square::H1)) && (!isSquareOccupied(allOccupancy, Square::F1)) 
+            && (!isSquareOccupied(allOccupancy, Square::G1)) && (!attacks::isSquareAttacked(position, Square::F1, attackingColor)) && (!attacks::isSquareAttacked(position, Square::G1, attackingColor))) {
+                Move move = {
+                source,
+                Square::G1,
+                color,
+                PieceType::KING,
+                MoveType::CASTLE,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+        } 
+        
+        if ((castlingRights & 0b00000100) && (position.getPieceBoard(color, PieceType::ROOK) & squareToBitboard(Square::A1)) && (!isSquareOccupied(allOccupancy, Square::B1)) 
+            && (!isSquareOccupied(allOccupancy, Square::C1)) && (!isSquareOccupied(allOccupancy, Square::D1)) && (!attacks::isSquareAttacked(position, Square::C1, attackingColor)) 
+            && (!attacks::isSquareAttacked(position, Square::D1, attackingColor))) {
+                Move move = {
+                    source,
+                    Square::C1,
+                    color,
+                    PieceType::KING,
+                    MoveType::CASTLE,
+                    std::nullopt
+                };
+
+                moves.push_back(move);
+        }
+    }
+
+    if ((color == Color::BLACK) && (kingBoard & squareToBitboard(Square::E8)) && (!attacks::isInCheck(position, color))) {
+        if ((castlingRights & 0b00000010) && (position.getPieceBoard(color, PieceType::ROOK) & squareToBitboard(Square::H8)) && (!isSquareOccupied(allOccupancy, Square::F8)) 
+            && (!isSquareOccupied(allOccupancy, Square::G8)) && (!attacks::isSquareAttacked(position, Square::F8, attackingColor)) && (!attacks::isSquareAttacked(position, Square::G8, attackingColor))) {
+                Move move = {
+                source,
+                Square::G8,
+                color,
+                PieceType::KING,
+                MoveType::CASTLE,
+                std::nullopt
+            };
+
+            moves.push_back(move);
+        }
+
+        if ((castlingRights & 0b00000001) && (position.getPieceBoard(color, PieceType::ROOK) & squareToBitboard(Square::A8)) && (!isSquareOccupied(allOccupancy, Square::B8)) 
+            && (!isSquareOccupied(allOccupancy, Square::C8)) && (!isSquareOccupied(allOccupancy, Square::D8)) && (!attacks::isSquareAttacked(position, Square::C8, attackingColor)) 
+            && (!attacks::isSquareAttacked(position, Square::D8, attackingColor))) {
+                Move move = {
+                    source,
+                    Square::C8,
+                    color,
+                    PieceType::KING,
+                    MoveType::CASTLE,
+                    std::nullopt
+                };
+
+                moves.push_back(move);
+        }
+    }
 }
 
 void generateBishopMoves(const Position& position, std::vector<Move>& moves) {
