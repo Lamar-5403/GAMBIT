@@ -360,15 +360,11 @@ void generateQueenMoves(const Position& position, std::vector<Move>& moves) {
     }
 }
 
-std::vector<Move> generatePseudoLegalMoves(const Position& position) {
-    std::vector<Move> moves;
-
+void generatePseudoLegalMoves(const Position& position, std::vector<Move>& moves) {
     generatePawnMoves(position, moves);
     generateKnightMoves(position, moves);
     generateBishopMoves(position, moves);
     generateRookMoves(position, moves);
     generateQueenMoves(position, moves);
     generateKingMoves(position, moves);
-
-    return moves;
 }

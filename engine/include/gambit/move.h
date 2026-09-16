@@ -36,4 +36,4 @@ void generateKingMoves(const Position& position, std::vector<Move>& moves);
 void generateBishopMoves(const Position& position, std::vector<Move>& moves);
 void generateRookMoves(const Position& position, std::vector<Move>& moves);
 void generateQueenMoves(const Position& position, std::vector<Move>& moves);
-std::vector<Move> generatePseudoLegalMoves(const Position& position);
+void generatePseudoLegalMoves(const Position& position, std::vector<Move>& moves);

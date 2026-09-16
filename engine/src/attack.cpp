@@ -236,4 +236,94 @@ namespace attacks {
         
         return ray & ~rayFromBlocker;
     }
+
+    bool isSquareAttacked(const Position& position, Square square, Color attackingColor) {
+        Bitboard attackingPawns = position.getPieceBoard(attackingColor, PieceType::PAWN);
+        Bitboard attackingKnights = position.getPieceBoard(attackingColor, PieceType::KNIGHT);
+        Bitboard attackingBishops = position.getPieceBoard(attackingColor, PieceType::BISHOP);
+        Bitboard attackingRooks = position.getPieceBoard(attackingColor, PieceType::ROOK);
+        Bitboard attackingQueens = position.getPieceBoard(attackingColor, PieceType::QUEEN);
+        Bitboard attackingKing = position.getPieceBoard(attackingColor, PieceType::KING);
+        Bitboard allOccupancy = position.getAllOccupancy();
+
+        Bitboard pawnAttackTable = (attackingColor == Color::WHITE) ? attacks::blackPawnAttackTable[static_cast<int>(square)] : attacks::whitePawnAttackTable[static_cast<int>(square)];
+
+        if (pawnAttackTable & attackingPawns) {
+            return true;
+        }
+
+        if (attacks::knightAttackTable[static_cast<int>(square)] & attackingKnights) {
+            return true;
+        }
+
+        if (attacks::kingAttackTable[static_cast<int>(square)] & attackingKing) {
+            return true;
+        }
+
+        std::optional<Square> firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].north, allOccupancy, attacks::RayDirection::NORTH);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingRooks) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].south, allOccupancy, attacks::RayDirection::SOUTH);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingRooks) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].east, allOccupancy, attacks::RayDirection::EAST);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingRooks) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].west, allOccupancy, attacks::RayDirection::WEST);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingRooks) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].northEast, allOccupancy, attacks::RayDirection::NORTH_EAST);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingBishops) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].northWest, allOccupancy, attacks::RayDirection::NORTH_WEST);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingBishops) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].southEast, allOccupancy, attacks::RayDirection::SOUTH_EAST);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingBishops) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        firstBlocker = attacks::getFirstBlocker(attacks::slidingRayTable[static_cast<int>(square)].southWest, allOccupancy, attacks::RayDirection::SOUTH_WEST);
+
+        if (firstBlocker) {
+            if ((squareToBitboard(*firstBlocker) & attackingBishops) || (squareToBitboard(*firstBlocker) & attackingQueens)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

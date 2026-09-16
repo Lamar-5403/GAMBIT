@@ -1,5 +1,6 @@
 #pragma once
 #include <gambit/board.h>
+#include <gambit/position.h>
 #include <array>
 #include <optional>
 #include <bit>
@@ -44,4 +45,6 @@ namespace attacks {
 
     std::optional<Square> getFirstBlocker(Bitboard ray, Bitboard occupancy, RayDirection direction);
     Bitboard truncateRay(Bitboard ray, Square firstBlocker, attacks::RayDirection direction);
+
+    bool isSquareAttacked(const Position& position, Square square, Color attackingColor);
 }

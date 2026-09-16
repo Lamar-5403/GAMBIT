@@ -297,3 +297,61 @@ bool testTruncateRay() {
     std::cout << "PASS: Ray truncation.\n";
     return true;
 }
+
+bool testIsSquareAttacked() {
+    Position position = positionFromFEN("2kr1b1r/pppq1ppp/2n5/1B1pP3/5B2/P1PbPN1P/1P1N1PPn/R2QK2R w KQ - 0 1"); // sliding piece and knight both attack square
+    bool passed = attacks::isSquareAttacked(position, Square::F1, Color::BLACK);
+
+    if (!passed) {
+        std::cout << "FAIL: Sliding piece and knight attack.\n";
+    }
+
+    position = positionFromFEN("2k2b1r/ppp2ppp/8/1B1qPn2/2b2Bn1/P1PrPN1P/1P1N1PP1/R2QK2R w KQ - 0 1"); // sliding piece blocked, flase
+    passed &= !attacks::isSquareAttacked(position, Square::F1, Color::BLACK);
+
+    if (!passed) {
+        std::cout << "FAIL: Sliding piece blocked.\n";
+    }
+
+    position = positionFromFEN("2k2b1r/ppp2ppp/8/1B1qPn2/2br1Bn1/P1P1PN1P/1P1N1PP1/R2QK2R w KQ - 0 1"); // attacked by sliding piece
+    passed &= attacks::isSquareAttacked(position, Square::F1, Color::BLACK);
+
+    if (!passed) {
+        std::cout << "FAIL: Sliding piece attack.\n";
+    }
+    
+    position = positionFromFEN("2k2b1r/ppp2ppp/4N3/1B1qPn2/2br1Bn1/P1P1PN1P/1P3PP1/R2QK2R b KQ - 0 1"); // attacked by white knight
+    passed &= attacks::isSquareAttacked(position, Square::C7, Color::WHITE);
+
+    if (!passed) {
+        std::cout << "FAIL: White knight attack.\n";
+    }
+
+    position = positionFromFEN("2k2b1r/ppp2ppp/4N3/1B1qPn2/2br1Bn1/P1P1PN1P/1P3PP1/R2QK2R b KQ - 0 1"); // square not attacked at all
+    passed &= !attacks::isSquareAttacked(position, Square::A8, Color::WHITE);
+
+    if (!passed) {
+        std::cout << "FAIL: Unrelated square.\n";
+    }
+    
+    position = positionFromFEN("2k2b1r/ppp2ppp/4N3/1B1qPn2/2br1Bn1/P1P1PN1P/1P3PP1/R2QK2R w KQ - 0 1"); // black king attack
+    passed &= attacks::isSquareAttacked(position, Square::B8, Color::BLACK);
+
+    if (!passed) {
+        std::cout << "FAIL: Black king attack.\n";
+    }
+
+    position = positionFromFEN("2k2b1r/ppp2ppp/4N3/1B1qPn2/2br1Bn1/P1P1PN1P/1P3PP1/R2QK2R b KQ - 0 1"); // white pawn attack
+    passed &= attacks::isSquareAttacked(position, Square::G4, Color::WHITE);
+
+    if (!passed) {
+        std::cout << "FAIL: White pawn attack.\n";
+    }
+
+    if (passed) {
+        std::cout << "PASS: isSquareAttacked() logic.\n";
+        return true;
+    }
+
+    return false;
+}

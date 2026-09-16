@@ -21,6 +21,7 @@ bool testTruncateRay();
 bool testGenerateBishopMoves();
 bool testGenerateRookMoves();
 bool testGenerateQueenMoves();
+bool testIsSquareAttacked();
 
 int main() {
     bool passed = true;
@@ -48,5 +49,6 @@ int main() {
     passed &= testGenerateBishopMoves();
     passed &= testGenerateRookMoves();
     passed &= testGenerateQueenMoves();
+    passed &= testIsSquareAttacked();
     return passed ? 0 : 1;
 }
