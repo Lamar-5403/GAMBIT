@@ -465,3 +465,178 @@ bool testGenerateQueenMoves() {
     std::cout << "PASS: Generate queen moves.\n";
     return true;
 }
+
+bool testCastling() {
+    bool passed = true;
+    Position position = positionFromFEN("rnbqk2r/pppp1ppp/3b1n2/4p3/4P3/3B1N2/PPPP1PPP/RNBQK2R w KQkq - 4 4"); // valid O-O, blocked O-O-O
+    std::vector<Move> actualMoves = {};
+    std::vector<Move> expectedMoves = {
+        {Square::E1, Square::E2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::F1, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::G1, Color::WHITE, PieceType::KING, MoveType::CASTLE, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: valid O-O.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: valid O-O.\n";
+            passed &= false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+    position = positionFromFEN("r1bqk2r/p1pp1ppp/1pnb1n2/4p3/4P3/3B1N2/PPPP1PPP/RNBQK2R w Qkq - 0 6"); // no castling right O-O, pieces blocking O-O-O
+
+    expectedMoves = {
+        {Square::E1, Square::E2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::F1, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: no castling right O-O, pieces blocking O-O-O.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: no castling right O-O, pieces blocking O-O-O.\n";
+            passed &= false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+    position = positionFromFEN("rnb1k2r/p1ppqppp/1p3n2/1Bb1p3/4P3/5P1N/PPPP2PP/RNBQK2R w KQkq - 0 1"); // G1 attacked, rights exist
+
+    expectedMoves = {
+        {Square::E1, Square::E2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::F1, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::F2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: O-O rights exist, G1 attacked.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: O-O rights exist, G1 attacked.\n";
+            passed &= false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+    position = positionFromFEN("rnbqkb1r/pppp1ppp/8/4p3/2B1P3/4nP1N/PPPP2PP/RNBQK2R w KQkq - 3 5"); // O-O rights exist, F1 attacked
+
+    expectedMoves = {
+        {Square::E1, Square::E2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::F1, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::F2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: O-O rights exist, F1 attacked.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: O-O rights exist, F1 attacked.\n";
+            passed &= false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+    position = positionFromFEN("r3kbnr/pppbpppp/2nq4/3p4/3P1B2/2NQ4/PPP1PPPP/R3KBNR w KQkq - 6 5"); // valid O-O-O
+
+    expectedMoves = {
+        {Square::E1, Square::D1, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::D2, Color::WHITE, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E1, Square::C1, Color::WHITE, PieceType::KING, MoveType::CASTLE, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: Valid O-O-O.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: Valid O-O-O.\n";
+            passed &= false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+    position = positionFromFEN("r3k2r/pppbqppp/2nbpn2/3p4/3P4/1PNBPN2/P1PB1PPP/R2Q1RK1 b kq - 0 8"); // valid O-O-O and O-O black
+
+    expectedMoves = {
+        {Square::E8, Square::D8, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E8, Square::F8, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E8, Square::C8, Color::BLACK, PieceType::KING, MoveType::CASTLE, std::nullopt},
+        {Square::E8, Square::G8, Color::BLACK, PieceType::KING, MoveType::CASTLE, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: Valid O-O-O and O-O black.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: Valid O-O-O and O-O black.\n";
+            passed &= false;
+        }
+    }
+
+    expectedMoves.clear();
+    actualMoves.clear();
+    position = positionFromFEN("r3k3/pppbqppp/2nbpn2/3p4/3P4/1PNBPN2/P1PB1PPP/R2Q1RK1 b kq - 0 8"); // both black castling rights exist, no rook on H8
+
+    expectedMoves = {
+        {Square::E8, Square::D8, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E8, Square::F8, Color::BLACK, PieceType::KING, MoveType::QUIET, std::nullopt},
+        {Square::E8, Square::C8, Color::BLACK, PieceType::KING, MoveType::CASTLE, std::nullopt}
+    };
+
+    generateKingMoves(position, actualMoves);
+
+    if (expectedMoves.size() != actualMoves.size()) {
+        std::cout << "FAIL: Valid O-O-O, no rook on H8.\n";
+        passed &= false;
+    }
+
+    for (const Move& expected : expectedMoves) {
+        if (std::find(actualMoves.begin(), actualMoves.end(), expected) == actualMoves.end()) {
+            std::cout << "FAIL: Valid O-O-O, no rook on H8.\n";
+            passed &= false;
+        }
+    }
+
+    if (passed) {
+        std::cout << "PASS: King castling generation.\n";
+    }
+
+    return passed;
+}
