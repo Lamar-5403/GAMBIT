@@ -4,6 +4,26 @@ bool testFile();
 bool testStartingPosition();
 bool testFileRankToSquare();
 bool testMakeMove();
+bool testForwardPawnMove();
+bool testStartingPositionFromFEN();
+bool testPositionFromFEN();
+bool testWhitePawnAttackTable();
+bool testBlackPawnAttackTable();
+bool testPseudoLegalPawnMoves();
+bool testKnightAttackTable();
+bool testKingAttackTable();
+bool testPseudoLegalKnightMoves();
+bool testEnPassant();
+bool testStandardKingMoves();
+bool testSlidingRayTable();
+bool testGetFirstBlocker();
+bool testTruncateRay();
+bool testGenerateBishopMoves();
+bool testGenerateRookMoves();
+bool testGenerateQueenMoves();
+bool testIsSquareAttacked();
+bool testIsInCheck();
+bool testCastling();
 
 int main() {
     bool passed = true;
@@ -14,6 +34,25 @@ int main() {
     passed &= testStartingPosition();
     passed &= testFileRankToSquare();
     passed &= testMakeMove();
-
+    passed &= testForwardPawnMove();
+    passed &= testStartingPositionFromFEN();
+    passed &= testPositionFromFEN();
+    passed &= testWhitePawnAttackTable();
+    passed &= testBlackPawnAttackTable();
+    passed &= testPseudoLegalPawnMoves();
+    passed &= testKnightAttackTable();
+    passed &= testKingAttackTable();
+    passed &= testPseudoLegalKnightMoves();
+    passed &= testEnPassant();
+    passed &= testStandardKingMoves();
+    passed &= testSlidingRayTable();
+    passed &= testGetFirstBlocker();
+    passed &= testTruncateRay();
+    passed &= testGenerateBishopMoves();
+    passed &= testGenerateRookMoves();
+    passed &= testGenerateQueenMoves();
+    passed &= testIsSquareAttacked();
+    passed &= testIsInCheck();
+    passed &= testCastling();
     return passed ? 0 : 1;
 }
