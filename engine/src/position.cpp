@@ -220,3 +220,40 @@ Position positionFromFEN(std::string FENstring) {
 
     return position;
 }
+
+std::string positionToFEN(const Position& position) {
+    std::ostringstream fen;
+    Bitboard whiteOccupancy = position.getOccupancy(Color::WHITE);
+    Bitboard blackOccupancy = position.getOccupancy(Color::BLACK);
+    Bitboard allOccupancy = position.getAllOccupancy();
+
+    Bitboard whitePawns = position.getPieceBoard(Color::WHITE, PieceType::PAWN);
+    Bitboard whiteKnights = position.getPieceBoard(Color::WHITE, PieceType::KNIGHT);
+    Bitboard whiteBishops = position.getPieceBoard(Color::WHITE, PieceType::BISHOP);
+    Bitboard whiteRooks = position.getPieceBoard(Color::WHITE, PieceType::ROOK);
+    Bitboard whiteQueen = position.getPieceBoard(Color::WHITE, PieceType::QUEEN);
+    Bitboard whiteKing = position.getPieceBoard(Color::WHITE, PieceType::KING);
+
+    Bitboard blackPawns = position.getPieceBoard(Color::BLACK, PieceType::PAWN);
+    Bitboard blackKnights = position.getPieceBoard(Color::BLACK, PieceType::KNIGHT);
+    Bitboard blackBishops = position.getPieceBoard(Color::BLACK, PieceType::BISHOP);
+    Bitboard blackRooks = position.getPieceBoard(Color::BLACK, PieceType::ROOK);
+    Bitboard blackQueen = position.getPieceBoard(Color::BLACK, PieceType::QUEEN);
+    Bitboard blackKing = position.getPieceBoard(Color::BLACK, PieceType::KING);
+
+    int emptySquares = 0;
+
+    for (int i = 0; i < NUM_SQUARES; i++) {
+        Bitboard squareBit = squareToBitboard(static_cast<Square>(i));
+
+        if (squareBit & allOccupancy) {
+            emptySquares = 0;
+            if (squareBit & whiteOccupancy) {
+
+            }
+        }
+
+    }
+
+    return fen.str();
+}

@@ -11,6 +11,12 @@ std::ostream& operator<<(std::ostream& os, Move move) {
 void makeMove(Position& position, const Move& move) {
     Bitboard& pieceBoard = position.getPieceBoard(move.color, move.piece);
 
+    switch (move.type) {
+        case MoveType::QUIET:
+            break;
+        
+    }
+
     pieceBoard = clearSquare(pieceBoard, move.source);
     pieceBoard = setSquare(pieceBoard, move.destination);
 }

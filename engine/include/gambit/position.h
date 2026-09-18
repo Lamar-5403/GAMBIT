@@ -36,3 +36,4 @@ class Position {
 };
 
 Position positionFromFEN(std::string FENstring);
+std::string positionToFEN(const Position& position);
