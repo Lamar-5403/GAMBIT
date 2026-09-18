@@ -19,6 +19,7 @@ G.A.M.B.I.T. is organized into several major subsystems:
 - Maps chess squares to individual bits
 - Provides square, rank, and file conversion utilities
 - Provides bitboard manipulation operations
+- Provides occupancy information for individual colors and the complete position
 
 ### Position
 
@@ -29,35 +30,48 @@ G.A.M.B.I.T. is organized into several major subsystems:
 - Tracks the en passant square
 - Tracks the half-move clock and full-move number
 - Initializes positions according to the standard starting position
+- Supports initialization from Forsyth-Edwards Notation (FEN)
 
 ### Move System
 
 - Represents individual chess moves
 - Applies moves to a position
 - Reverts previously applied moves
+- Represents quiet moves, captures, double pawn pushes, en passant, castling, and pawn promotions
 - Provides the foundation for move generation and game-state transitions
 
 ### Move Generation
 
+Implemented functionality includes:
+
+- Pseudo-legal pawn move generation
+- Pawn captures and double pushes
+- En passant
+- Pawn promotions and promotion captures
+- Knight move generation
+- Bishop, rook, and queen sliding move generation
+- King move generation
+- Castling
+
+Pseudo-legal move generation does not filter ordinary moves based on whether they leave the moving side's king in check. Legal move generation will perform this validation.
+
 Planned functionality includes:
 
-- Pseudo-legal move generation
 - Legal move generation
-- Captures
-- Castling
-- En passant
-- Pawn Promotion
-- Check and checkmate detection
+- Checkmate and stalemate detection
+- Complete game-state transition handling for all move types
 
 ### Search and Evaluation
 
 Planned functionality includes:
 
 - Position evaluation
-- Game-tree search
+- Minimax search
 - Alpha-beta pruning
-- Move ordering
+- Iterative deepening
 - Quiescence search
+- Move ordering
+- Zobrist hashing
 - Transposition tables
 
 ### Machine Learning
@@ -115,6 +129,7 @@ Move
 |-- destination
 |-- piece
 |-- color
+|-- type
 |-- promotionPiece
 ```
 
@@ -139,14 +154,14 @@ The Elo graph will be updated as significant engine versions are evaluated.
 ```text
 Elo
 ^
-|							*
-|						*
-|					*
-|				*
-|			*
-|		*
-|	*
-|*
+|
+|
+|
+|
+|
+|
+|
+|
 +--------------------------------------------------------> Version
  v0.1	v0.2   v0.3    v0.4    v0.5    v0.6    v0.7    v0.8
 ```
@@ -167,8 +182,22 @@ Current tests cover:
 - Square-to-rank conversion
 - Square-to-file conversion
 - File/rank-to-square conversion
-- Starting-position piece placement
-- Basic move application
+- Bitboard manipulation and occupancy detection
+- Starting-position initialization
+- FEN parsing
+- Position state access
+- Move representation
+- Basic move application and reversal
+- Pawn, knight, bishop, rook, queen, and king move generation
+- Castling
+- En passant
+- Pawn promotion and promotion captures
+- Pawn, knight, and king attack tables
+- Sliding attack rays
+- First-blocker detection
+- Ray truncation
+- Square attack detection
+- Check detection
 
 Additional test coverage will be added alongside each major subsystem.
 
@@ -182,18 +211,21 @@ Additional test coverage will be added alongside each major subsystem.
 
 /engine
 	/include/gambit
+		attack.h
 		board.h
 		move.h
 		position.h
 	/src
+		attack.cpp
 		board.cpp
 		main.cpp
 		move.cpp
 		position.cpp
 	/tests
-		test_bitboard.cpp
+		test_attacks.cpp
+		test_board.cpp
 		test_move.cpp
-		test_startingPosition.cpp
+		test_position.cpp
 
 .gitignore
 CMakeLists.txt
@@ -209,10 +241,13 @@ G.A.M.B.I.T. is being developed with an emphasis on:
 - Clear separation of responsibilities
 - Deterministic and testable behavior
 - Efficient data representation
+- Correctness before optimization
 - Incremental validation
+- Rigorous automated testing
 - Reproducible performance measurements
 - Maintainable C++ architecture
 - Measurable improvements in playing strength
+- Optimization based on measured behavior rather than premature complexity
 
 ---
 
@@ -220,4 +255,6 @@ G.A.M.B.I.T. is being developed with an emphasis on:
 
 G.A.M.B.I.T. is under active development.
 
-The board and position foundations are implemented and tested. The move system is currently being developed, with move generation, search, and machine learning planned as subsequent stages.
+The board and position foundations are implemented and tested, including FEN parsing and position-state management. Attack-generation infrastructure and pseudo-legal move generation are also implemented and tested, including pawn movement, captures, promotions, en passant, sliding pieces, knights, kings, and castling.
+
+The current development stage is legal move generation, including king-safety validation and the completion of game-state transition handling.
