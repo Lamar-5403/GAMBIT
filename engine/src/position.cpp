@@ -2,6 +2,45 @@
 #include <cctype>
 #include <sstream>
 
+namespace {
+
+    constexpr std::array<std::array<char, 6>, 2> FEN_CHARS{{
+        {{'P', 'N', 'B', 'R', 'Q', 'K'}},
+        {{'p', 'n', 'b', 'r', 'q', 'k'}}
+    }};
+
+    char pieceToFENChar(Color color, PieceType piece) {
+        return FEN_CHARS[static_cast<std::size_t>(color)][static_cast<std::size_t>(piece)];
+    }
+
+    std::string castlingRightToFENChar(uint8_t castlingRights) {
+
+        if (castlingRights == 0) {
+            return "-";
+        }
+
+        std::string castlingChars = "";
+
+        if (castlingRights & 0b00001000) {
+            castlingChars.append("K");
+        }
+
+        if (castlingRights & 0b00000100) {
+            castlingChars.append("Q");
+        }
+
+        if (castlingRights & 0b00000010) {
+            castlingChars.append("k");
+        }
+
+        if (castlingRights & 0b00000001) {
+            castlingChars.append("q");
+        }
+
+        return castlingChars;
+    }
+}
+
 Position::Position() :
     pieces{}, 
     sideToMove(Color::WHITE), 
@@ -19,7 +58,6 @@ Position Position::starting() {
 
     return position;
 }
-
 
 Bitboard& Position::getPieceBoard(Color color, PieceType piece) {
     return pieces[static_cast<uint8_t>(color)][static_cast<uint8_t>(piece)];
@@ -231,29 +269,89 @@ std::string positionToFEN(const Position& position) {
     Bitboard whiteKnights = position.getPieceBoard(Color::WHITE, PieceType::KNIGHT);
     Bitboard whiteBishops = position.getPieceBoard(Color::WHITE, PieceType::BISHOP);
     Bitboard whiteRooks = position.getPieceBoard(Color::WHITE, PieceType::ROOK);
-    Bitboard whiteQueen = position.getPieceBoard(Color::WHITE, PieceType::QUEEN);
+    Bitboard whiteQueens = position.getPieceBoard(Color::WHITE, PieceType::QUEEN);
     Bitboard whiteKing = position.getPieceBoard(Color::WHITE, PieceType::KING);
 
     Bitboard blackPawns = position.getPieceBoard(Color::BLACK, PieceType::PAWN);
     Bitboard blackKnights = position.getPieceBoard(Color::BLACK, PieceType::KNIGHT);
     Bitboard blackBishops = position.getPieceBoard(Color::BLACK, PieceType::BISHOP);
     Bitboard blackRooks = position.getPieceBoard(Color::BLACK, PieceType::ROOK);
-    Bitboard blackQueen = position.getPieceBoard(Color::BLACK, PieceType::QUEEN);
+    Bitboard blackQueens = position.getPieceBoard(Color::BLACK, PieceType::QUEEN);
     Bitboard blackKing = position.getPieceBoard(Color::BLACK, PieceType::KING);
 
     int emptySquares = 0;
 
-    for (int i = 0; i < NUM_SQUARES; i++) {
-        Bitboard squareBit = squareToBitboard(static_cast<Square>(i));
+    for (int rank = 0; rank < BOARD_SIZE; rank++) {
+        for (int file = 0; file < BOARD_SIZE; file++) {
+            int squareIndex = rank * BOARD_SIZE + file;
+            Square square = static_cast<Square>(squareIndex);
+            Bitboard squareBit = squareToBitboard(square);
 
-        if (squareBit & allOccupancy) {
-            emptySquares = 0;
-            if (squareBit & whiteOccupancy) {
+            if (!isSquareOccupied(allOccupancy, square)) {
+                emptySquares++;
+            } else {
+                if (emptySquares > 0) {
+                    fen << emptySquares;
+                    emptySquares = 0;
+                }
 
+                if (squareBit & whiteOccupancy) {
+                    if (squareBit & whitePawns) {
+                        fen << pieceToFENChar(Color::WHITE, PieceType::PAWN);
+                    } else if (squareBit & whiteKnights) {
+                        fen << pieceToFENChar(Color::WHITE, PieceType::KNIGHT);
+                    } else if (squareBit & whiteBishops) {
+                        fen << pieceToFENChar(Color::WHITE, PieceType::BISHOP);
+                    } else if (squareBit & whiteRooks) {
+                        fen << pieceToFENChar(Color::WHITE, PieceType::ROOK);
+                    } else if (squareBit & whiteQueens) {
+                        fen << pieceToFENChar(Color::WHITE, PieceType::QUEEN);
+                    } else if (squareBit & whiteKing) {
+                        fen << pieceToFENChar(Color::WHITE, PieceType::KING);
+                    }
+                } else if (squareBit & blackOccupancy) {
+                    if (squareBit & blackPawns) {
+                        fen << pieceToFENChar(Color::BLACK, PieceType::PAWN);
+                    } else if (squareBit & blackKnights) {
+                        fen << pieceToFENChar(Color::BLACK, PieceType::KNIGHT);
+                    } else if (squareBit & blackBishops) {
+                        fen << pieceToFENChar(Color::BLACK, PieceType::BISHOP);
+                    } else if (squareBit & blackRooks) {
+                        fen << pieceToFENChar(Color::BLACK, PieceType::ROOK);
+                    } else if (squareBit & blackQueens) {
+                        fen << pieceToFENChar(Color::BLACK, PieceType::QUEEN);
+                    } else if (squareBit & blackKing) {
+                        fen << pieceToFENChar(Color::BLACK, PieceType::KING);
+                    }
+                }
             }
         }
 
+        if (emptySquares > 0) {
+            fen << emptySquares;
+            emptySquares = 0;
+        }
+
+        if (rank < BOARD_SIZE - 1) {
+            fen << '/';
+        }
     }
+
+    fen << " " << (position.getSideToMove() == Color::WHITE ? 'w' : 'b');
+
+    fen << " " << castlingRightToFENChar(position.getCastlingRights());
+
+    std::optional<Square> target = position.getEnPassantSquare();
+    if (target) {
+        Square enPassantSquare = *target;
+        fen << " " << std::tolower(squareToFile(enPassantSquare));
+        fen << squareToRank(enPassantSquare);
+    } else {
+        fen << " -";
+    }
+
+    fen << " " << position.getHalfMoveClock();
+    fen << " " << position.getFullMoveNumber();
 
     return fen.str();
 }
