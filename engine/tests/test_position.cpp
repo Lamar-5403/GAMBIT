@@ -247,3 +247,26 @@ bool testPositionFromFEN() {
 
     return true;
 }
+
+bool testStartingPositionToFEN() {
+    Position position = Position::starting();
+    std::string fenString = positionToFEN(position);
+    std::cout << "Starting position to FEN: " << fenString << "\n";
+    if (fenString != "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1") {
+        return false;
+    }
+    return true;
+}
+
+bool testPositionToFEN() {
+    Position position = positionFromFEN("B1n1k2r/8/5p2/3q2P1/3QN2P/3b4/8/R3K3 b Qk h3 18 9");
+
+    std::string fenString = positionToFEN(position);
+
+    std::cout << "Arbitrary position to FEN: " << fenString << "\n";
+    if (fenString != "B1n1k2r/8/5p2/3q2P1/3QN2P/3b4/8/R3K3 b Qk h3 18 9") {
+        return false;
+    }
+
+    return true;
+}

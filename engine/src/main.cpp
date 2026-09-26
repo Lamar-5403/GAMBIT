@@ -24,6 +24,8 @@ bool testGenerateQueenMoves();
 bool testIsSquareAttacked();
 bool testIsInCheck();
 bool testCastling();
+bool testStartingPositionToFEN();
+bool testPositionToFEN();
 
 int main() {
     bool passed = true;
@@ -54,5 +56,7 @@ int main() {
     passed &= testIsSquareAttacked();
     passed &= testIsInCheck();
     passed &= testCastling();
+    passed &= testStartingPositionToFEN();
+    passed &= testPositionToFEN();
     return passed ? 0 : 1;
 }

@@ -344,7 +344,7 @@ std::string positionToFEN(const Position& position) {
     std::optional<Square> target = position.getEnPassantSquare();
     if (target) {
         Square enPassantSquare = *target;
-        fen << " " << std::tolower(squareToFile(enPassantSquare));
+        fen << " " << static_cast<char>(std::tolower(squareToFile(enPassantSquare)));
         fen << squareToRank(enPassantSquare);
     } else {
         fen << " -";
