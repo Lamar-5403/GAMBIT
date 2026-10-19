@@ -355,3 +355,17 @@ std::string positionToFEN(const Position& position) {
 
     return fen.str();
 }
+
+std::optional<PieceType> getPieceAt(const Position& position, Color color, Square square) {
+    Bitboard targetSquare = squareToBitboard(square);
+
+    for (int i = 0; i < 6; i++) {
+        PieceType piece = static_cast<PieceType>(i);
+        Bitboard board = position.getPieceBoard(color, piece);
+        if (board & targetSquare) {
+            return piece;
+        }
+    }
+
+    return std::nullopt;
+}

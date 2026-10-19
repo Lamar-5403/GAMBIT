@@ -26,8 +26,8 @@ struct Move {
 
 std::ostream& operator<<(std::ostream& os, Move move);
 
-void makeMove(Position& position, const Move& move);
-void unmakeMove(Position& position, const Move& move);
+void makeMove(Position& position, const Move& move, UndoState& undo);
+void unmakeMove(Position& position, const Move& move, const UndoState& undo);
 
 void generateSlidingMoves(Bitboard ray, attacks::RayDirection direction, Square source, PieceType piece, Color color, Bitboard enemyOccupancy, Bitboard friendlyOccupancy, Bitboard allOccupancy, std::vector<Move>& moves);
 void generatePawnMoves(const Position& position, std::vector<Move>& moves);

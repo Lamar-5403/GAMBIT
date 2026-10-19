@@ -5,6 +5,13 @@
 #include <string>
 #include <array>
 
+struct UndoState {
+    std::optional<PieceType> capturedPiece;
+    std::optional<Square> previousEnPassantSquare;
+    uint8_t previousCastlingRights;
+    int previousHalfMoveClock;
+};
+
 class Position {
     public:
         Position();
@@ -37,3 +44,4 @@ class Position {
 
 Position positionFromFEN(std::string FENstring);
 std::string positionToFEN(const Position& position);
+std::optional<PieceType> getPieceAt(const Position& position, Color color, Square square);

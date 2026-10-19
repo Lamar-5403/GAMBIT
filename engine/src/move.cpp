@@ -8,20 +8,82 @@ std::ostream& operator<<(std::ostream& os, Move move) {
     return os;
 }
 
-void makeMove(Position& position, const Move& move) {
+void makeMove(Position& position, const Move& move, UndoState& undo) {
+    Color enemyColor = (move.color == Color::WHITE ? Color::BLACK : Color::WHITE);
+    undo.capturedPiece = std::nullopt;
+    undo.previousCastlingRights = position.getCastlingRights();
+    undo.previousEnPassantSquare = position.getEnPassantSquare();
+    position.getEnPassantSquare() = std::nullopt;
+    undo.previousHalfMoveClock = position.getHalfMoveClock();
+
     Bitboard& pieceBoard = position.getPieceBoard(move.color, move.piece);
 
     switch (move.type) {
-        case MoveType::QUIET:
+        case MoveType::QUIET: {
+            pieceBoard = clearSquare(pieceBoard, move.source);
+            pieceBoard = setSquare(pieceBoard, move.destination);
             break;
-        
-    }
+        }
 
-    pieceBoard = clearSquare(pieceBoard, move.source);
-    pieceBoard = setSquare(pieceBoard, move.destination);
+        case MoveType::DOUBLE_PAWN_PUSH: {
+            pieceBoard = clearSquare(pieceBoard, move.source);
+            pieceBoard = setSquare(pieceBoard, move.destination);
+            int direction = (move.color == Color::WHITE) ? -BOARD_SIZE : BOARD_SIZE;
+            position.getEnPassantSquare() = static_cast<Square>(static_cast<int>(move.source) + direction);
+            break;
+        }
+
+        case MoveType::CAPTURE: {
+            PieceType capturedPiece = *getPieceAt(position, enemyColor, move.destination);
+            undo.capturedPiece = capturedPiece;
+            position.getPieceBoard(enemyColor, capturedPiece) = clearSquare(position.getPieceBoard(enemyColor, capturedPiece), move.destination);
+
+            pieceBoard = clearSquare(pieceBoard, move.source);
+            pieceBoard = setSquare(pieceBoard, move.destination);
+            break;
+        }
+
+        case MoveType::EN_PASSANT: {
+            PieceType capturedPiece = *getPieceAt(position, enemyColor, move.destination);
+            undo.capturedPiece = PieceType::PAWN;
+            int direction = (enemyColor == Color::WHITE) ? -BOARD_SIZE : BOARD_SIZE;
+            Square enemyPawn = static_cast<Square>(static_cast<int>(move.destination) + direction);
+            position.getPieceBoard(enemyColor, capturedPiece) = clearSquare(position.getPieceBoard(enemyColor, capturedPiece), enemyPawn);
+            pieceBoard = clearSquare(pieceBoard, move.source);
+            pieceBoard = setSquare(pieceBoard, move.destination);
+            break;
+        }
+
+        case MoveType::PROMOTION: {
+            PieceType capturedPiece = *getPieceAt(position, enemyColor, move.destination);
+            pieceBoard = clearSquare(pieceBoard, move.source);
+            Bitboard promotionPieceboard = position.getPieceBoard(move.color, *(move.promotionPiece));
+            // move.promotionPiece to bitboard -> set destination square
+            break;
+        }
+
+        case MoveType::PROMOTION_CAPTURE: {
+            PieceType capturedPiece = *getPieceAt(position, enemyColor, move.destination);
+            undo.capturedPiece = capturedPiece;
+            position.getPieceBoard(enemyColor, capturedPiece) = clearSquare(position.getPieceBoard(enemyColor, capturedPiece), move.destination);
+            pieceBoard = clearSquare(pieceBoard, move.source);
+
+            // move.promotionPiece to bitboard -> set destination square
+            break;
+        }
+
+        case MoveType::CASTLE: {
+            //pieceboard for king -> clear source, set destination
+            //piece board for rook -> clear source, set destination
+            break;
+        }
+
+        default:
+            break;
+    }
 }
 
-void unmakeMove(Position& position, const Move& move) {
+void unmakeMove(Position& position, const Move& move, const UndoState& undo) {
     Bitboard& pieceBoard = position.getPieceBoard(move.color, move.piece);
 
     pieceBoard = clearSquare(pieceBoard, move.destination);
